@@ -92,7 +92,7 @@ argument-hint: [FEATURE-ID|--all]
 - `rules.yaml` 是否存在。
 - `project-profile.yaml` 中 `rules.files` 指向的文件是否存在。
 - 是否存在未被 `rules.files` 引用的 `.spec-flow-kit/rules/*.md`。
-- 是否可能需要后续运行 `/sfk-rules-sync`。
+- 是否需要运行 `/sfk-rules-sync`。
 
 ## 输出示例
 
@@ -117,7 +117,7 @@ Evidence:
 
 Rules:
   ✅ rules.yaml exists
-  🟡 rules.files 可能不同步；后续可运行：/sfk-rules-sync
+  🟡 rules.files 可能不同步；可运行：/sfk-rules-sync
 
 Next:
   /sfk-verify AUTH-LOCK-001

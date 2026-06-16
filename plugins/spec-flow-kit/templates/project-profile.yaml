@@ -21,7 +21,7 @@ commands:
 rules:
   # 项目规则文件列表，是后续命令加载规则正文的入口。
   # /sfk-design、/sfk-plan、/sfk-development、/sfk-verify 和 /sfk-audit 会按需读取这些文件。
-  # 如果用户新增、删除或重命名 rules/*.md，后续 /sfk-rules-sync 应同步维护这里。
+  # 如果用户新增、删除或重命名 rules/*.md，/sfk-rules-sync 应同步维护这里。
   # 插件不应无提示删除用户手动添加且文件仍存在的条目。
   files:
     - .spec-flow-kit/rules/engineering-structure.md

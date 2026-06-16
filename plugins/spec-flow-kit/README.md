@@ -36,9 +36,10 @@ Claude Code 的本地规范驱动交付治理插件。
 | `/sfk-plan` | `/spec-flow-kit:sfk-plan` | 拆分任务并初始化 traceability |
 | `/sfk-development` | `/spec-flow-kit:sfk-development` | 实现任务并更新 traceability |
 | `/sfk-verify` | `/spec-flow-kit:sfk-verify` | 验证验收标准并记录 evidence |
+| `/sfk-rules-sync` | `/spec-flow-kit:sfk-rules-sync` | 同步规则索引和规则文件列表 |
 | `/sfk-status` | `/spec-flow-kit:sfk-status` | 查看当前 feature 状态、gate、缺口和下一步 |
 
-后续可能增加 `/sfk-audit`、`/sfk-rules-sync`、`/sfk-next`、`/sfk-deliver` 和 `/sfk-deploy`。
+后续可能增加 `/sfk-audit`、`/sfk-next`、`/sfk-deliver` 和 `/sfk-deploy`。
 
 ## 计划生成的本地工作区
 
@@ -109,6 +110,7 @@ spec-flow-kit/
 │   ├── sfk-plan.md
 │   ├── sfk-development.md
 │   ├── sfk-verify.md
+│   ├── sfk-rules-sync.md
 │   └── sfk-status.md
 ├── agents/
 ├── skills/
@@ -132,11 +134,13 @@ spec-flow-kit/
 3. 实现 `/sfk-init`、`/sfk-requirements`、`/sfk-use`、`/sfk-design`、`/sfk-plan` 和 `/sfk-status`。✅
 4. 实现 `/sfk-development` 和 `/sfk-verify`，支持 traceability 和 evidence 更新。✅
 5. 添加可选提示型 hooks。✅
-6. 后续增加 audit、`/sfk-rules-sync`、strict gates、delivery readiness、deployment runbooks 和可选本地 MCP 状态服务。
+6. 实现 `/sfk-rules-sync`，同步规则索引和规则文件列表。✅
+7. 后续增加 audit、strict gates、delivery readiness、deployment runbooks 和可选本地 MCP 状态服务。
 
 ## 说明
 
-- MVP 核心 commands 已实现为 prompt 文件：`/sfk-init`、`/sfk-requirements`、`/sfk-use`、`/sfk-design`、`/sfk-plan`、`/sfk-development`、`/sfk-verify`、`/sfk-status`。
+- MVP 核心 commands 已实现为 prompt 文件：`/sfk-init`、`/sfk-requirements`、`/sfk-use`、`/sfk-design`、`/sfk-plan`、`/sfk-development`、`/sfk-verify`、`/sfk-rules-sync`、`/sfk-status`。
+- `/sfk-rules-sync` 是规则索引同步命令，负责检查和维护 `rules.yaml` 与 `project-profile.yaml` 中的 `rules.files`。
 - `/sfk-development` 和 `/sfk-verify` 是 prompt-only workflow；它们依赖项目本地文件协议、traceability schema、evidence schema 和真实命令/CI/用户确认 evidence。
 - agents 尚未实现。
 - skills 尚未实现。

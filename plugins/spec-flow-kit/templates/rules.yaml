@@ -1,5 +1,6 @@
 # 用户规则索引。
 # rules.yaml 用于把 rules/*.md 中的自然语言规则结构化，方便 Gate、Audit 和命令按范围加载。
+# /sfk-rules-sync 可同步维护此索引和 project-profile.yaml 中的 rules.files。
 # 注意：自动发现的规则建议先保持 proposed，用户确认后再改为 active。
 
 version: 1 # 文件协议版本，当前保持为 1。

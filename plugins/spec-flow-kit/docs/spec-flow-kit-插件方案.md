@@ -837,11 +837,25 @@ enforcement.mode: advisory | strict
 status: proposed | active | deprecated
 ```
 
-### 11.2 `/sfk-rules-sync` 后续命令
+### 11.2 `/sfk-rules-sync` 规则同步命令
 
-`/sfk-rules-sync` 是后续计划命令，不进入 MVP 第一批核心命令。
+`/sfk-rules-sync` 是规则治理维护命令，用于同步 `.spec-flow-kit/rules/*.md`、`rules.yaml` 和 `project-profile.yaml` 中的 `rules.files`。
 
 完整显示：`/spec-flow-kit:sfk-rules-sync`
+
+支持：
+
+```text
+/sfk-rules-sync
+/sfk-rules-sync --check
+/sfk-rules-sync --apply
+```
+
+模式：
+
+- 无参数：默认检查并输出建议；如需要写入，先说明将修改的文件并请求用户确认。
+- `--check`：只读检查，不写入文件。
+- `--apply`：同步 `rules.yaml` 和 `project-profile.yaml`，但不修改 `rules/*.md` 正文。
 
 职责：
 
@@ -850,7 +864,7 @@ status: proposed | active | deprecated
 - 发现已删除但仍在 `rules.yaml` 中引用的规则。
 - 发现 `sourceLines` 可能失效的规则。
 - 从规则正文提取候选结构化规则。
-- 更新 `rules.yaml`，新规则默认 `status: proposed`。
+- 更新 `rules.yaml`，新规则默认 `status: proposed` 且 `enforcement.mode: advisory`。
 - 同步更新 `project-profile.yaml` 中的 `rules.files`，确保新增、删除或重命名的规则文件能被后续命令加载。
 - 输出需要用户确认的规则列表。
 
@@ -862,11 +876,11 @@ status: proposed | active | deprecated
 - 不无提示覆盖用户手写的 `rules/*.md`。
 - 不删除 `project-profile.yaml` 中用户手动添加但仍存在的规则文件引用；只提示并请求确认。
 
-MVP 中如果暂不实现该命令，`/sfk-status` 和 `/sfk-audit` 应至少提示：
+规则同步命令输出示例：
 
 ```text
 发现 rules/*.md 与 rules.yaml 或 project-profile.yaml 中的 rules.files 可能不同步。
-后续可运行 /sfk-rules-sync 同步规则索引和规则文件列表。
+可运行 /sfk-rules-sync --check 查看差异，或在确认后运行 /sfk-rules-sync --apply 同步规则索引和规则文件列表。
 ```
 
 ### 11.3 Project Profile 维护模型
@@ -914,10 +928,10 @@ spec-flow-kit/
     sfk-plan.md
     sfk-development.md
     sfk-verify.md
+    sfk-rules-sync.md
     sfk-status.md
     # future:
     sfk-audit.md
-    sfk-rules-sync.md
     sfk-next.md
     sfk-deliver.md
     sfk-deploy.md
@@ -1710,8 +1724,8 @@ pre-deploy-gate.js
 交付：
 
 ```text
-/sfk-audit
 /sfk-rules-sync
+/sfk-audit
 strict gate mode
 waiver mechanism
 untraced change detection
@@ -1869,8 +1883,8 @@ README 和 marketplace 描述必须明确：
 
 ### P5：增强治理
 
-- `/sfk-audit`
 - `/sfk-rules-sync`
+- `/sfk-audit`
 - strict mode
 - waiver mechanism
 - rules compliance check
