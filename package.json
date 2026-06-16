@@ -6,9 +6,11 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "validate": "npm run validate:marketplace && npm run validate:claude",
+    "validate": "npm run validate:marketplace && npm run validate:spec-flow-kit && npm run smoke:spec-flow-kit:mcp && npm run validate:claude",
     "validate:claude": "claude plugin validate .",
     "validate:claude:strict": "claude plugin validate . --strict",
-    "validate:marketplace": "node scripts/validate-marketplace.mjs"
+    "validate:marketplace": "node scripts/validate-marketplace.mjs",
+    "validate:spec-flow-kit": "node scripts/validate-spec-flow-kit.mjs",
+    "smoke:spec-flow-kit:mcp": "node scripts/smoke-spec-flow-kit-mcp.mjs"
   }
 }

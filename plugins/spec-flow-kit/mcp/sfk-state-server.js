@@ -17,6 +17,15 @@ function readJsonIfExists(filePath) {
   }
 }
 
+function readTextIfExists(filePath) {
+  if (!existsSync(filePath)) return null;
+  try {
+    return readFileSync(filePath, 'utf8');
+  } catch {
+    return null;
+  }
+}
+
 function writeJson(filePath, value) {
   writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
@@ -33,13 +42,14 @@ function safeFeatureDir(state, featureId) {
 }
 
 function getState() {
+  const projectProfilePath = path.join(specRoot, 'project-profile.yaml');
   return {
     projectRoot,
     specRoot,
     initialized: existsSync(specRoot),
     state: readJsonIfExists(path.join(specRoot, 'state.json')),
     gates: readJsonIfExists(path.join(specRoot, 'gates.json')),
-    projectProfile: readJsonIfExists(path.join(specRoot, 'project-profile.yaml')),
+    projectProfile: readTextIfExists(projectProfilePath),
   };
 }
 
@@ -171,12 +181,17 @@ function toolList() {
   ];
 }
 
+function writeMessage(message) {
+  const body = JSON.stringify(message);
+  process.stdout.write(`Content-Length: ${Buffer.byteLength(body, 'utf8')}\r\n\r\n${body}`);
+}
+
 function writeResponse(id, result) {
-  process.stdout.write(`${JSON.stringify({ jsonrpc: '2.0', id, result })}\n`);
+  writeMessage({ jsonrpc: '2.0', id, result });
 }
 
 function writeError(id, code, message) {
-  process.stdout.write(`${JSON.stringify({ jsonrpc: '2.0', id, error: { code, message } })}\n`);
+  writeMessage({ jsonrpc: '2.0', id, error: { code, message } });
 }
 
 function handleRequest(request) {
@@ -189,6 +204,8 @@ function handleRequest(request) {
     });
     return;
   }
+
+  if (method === 'notifications/initialized') return;
 
   if (method === 'tools/list') {
     writeResponse(id, { tools: toolList() });
@@ -220,21 +237,52 @@ function handleRequest(request) {
   if (id !== undefined) writeError(id, -32601, `Unsupported method: ${method}`);
 }
 
-let buffer = '';
-process.stdin.setEncoding('utf8');
+function tryReadContentLength(buffer) {
+  const headerEnd = buffer.indexOf('\r\n\r\n');
+  if (headerEnd === -1) return null;
+
+  const header = buffer.slice(0, headerEnd).toString('utf8');
+  const match = header.match(/(?:^|\r\n)Content-Length:\s*(\d+)/i);
+  if (!match) return null;
+
+  const length = Number(match[1]);
+  const bodyStart = headerEnd + 4;
+  const bodyEnd = bodyStart + length;
+  if (buffer.length < bodyEnd) return null;
+
+  return {
+    body: buffer.slice(bodyStart, bodyEnd).toString('utf8'),
+    rest: buffer.slice(bodyEnd),
+  };
+}
+
+function tryReadJsonLine(buffer) {
+  const newline = buffer.indexOf('\n');
+  if (newline === -1) return null;
+
+  const lineBuffer = buffer.slice(0, newline);
+  const line = lineBuffer.toString('utf8').trim();
+  if (!line.startsWith('{')) return null;
+
+  return {
+    body: line,
+    rest: buffer.slice(newline + 1),
+  };
+}
+
+let inputBuffer = Buffer.alloc(0);
 process.stdin.on('data', (chunk) => {
-  buffer += chunk;
-  let newlineIndex = buffer.indexOf('\n');
-  while (newlineIndex !== -1) {
-    const line = buffer.slice(0, newlineIndex).trim();
-    buffer = buffer.slice(newlineIndex + 1);
-    if (line) {
-      try {
-        handleRequest(JSON.parse(line));
-      } catch (error) {
-        writeError(null, -32700, error instanceof Error ? error.message : 'Parse error');
-      }
+  inputBuffer = Buffer.concat([inputBuffer, Buffer.from(chunk)]);
+
+  while (inputBuffer.length > 0) {
+    const message = tryReadContentLength(inputBuffer) ?? tryReadJsonLine(inputBuffer);
+    if (!message) break;
+
+    inputBuffer = message.rest;
+    try {
+      handleRequest(JSON.parse(message.body));
+    } catch (error) {
+      writeError(null, -32700, error instanceof Error ? error.message : 'Parse error');
     }
-    newlineIndex = buffer.indexOf('\n');
   }
 });
