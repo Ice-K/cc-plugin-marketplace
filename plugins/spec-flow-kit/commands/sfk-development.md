@@ -1,6 +1,6 @@
 ---
 description: 按任务实现代码和测试并更新 traceability
-argument-hint: [FEATURE-ID] [--task TASK-ID]
+argument-hint: "[FEATURE-ID] [--task TASK-ID]"
 ---
 
 # /sfk-development
