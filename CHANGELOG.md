@@ -23,6 +23,7 @@ This project uses two layers of versioning:
 - Added waiver schema/template support for explicit gate, rule, traceability, evidence, task, and requirement waivers.
 - Added optional rules-compliance advisory hook and strict-mode gate hook scripts for edit, test, and deploy checks.
 - Added optional local MCP state server tools for spec-flow-kit state, traceability, gate, evidence, and next-action operations.
+- Added automated `spec-flow-kit` structure validation, MCP smoke tests, hook smoke tests, and GitHub Actions validation workflow.
 - Added marketplace documentation and validation scaffolding.
 
 ### Changed

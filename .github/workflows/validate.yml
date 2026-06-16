@@ -1,0 +1,43 @@
+name: Validate marketplace
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate marketplace and plugins
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate marketplace manifest
+        run: npm run validate:marketplace
+
+      - name: Validate spec-flow-kit structure
+        run: npm run validate:spec-flow-kit
+
+      - name: Smoke test spec-flow-kit MCP server
+        run: npm run smoke:spec-flow-kit:mcp
+
+      - name: Smoke test spec-flow-kit hooks
+        run: npm run smoke:spec-flow-kit:hooks
+
+      - name: Run Claude plugin validation when CLI is available
+        shell: bash
+        run: |
+          if command -v claude >/dev/null 2>&1; then
+            npm run validate:claude:strict
+          else
+            echo "Claude CLI is not installed in this runner; skipping claude plugin validate."
+          fi

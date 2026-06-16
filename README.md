@@ -35,6 +35,19 @@ Run repository convention checks:
 npm run validate:marketplace
 ```
 
+Run `spec-flow-kit` structural checks:
+
+```sh
+npm run validate:spec-flow-kit
+```
+
+Run runtime smoke tests for `spec-flow-kit` local integrations:
+
+```sh
+npm run smoke:spec-flow-kit:mcp
+npm run smoke:spec-flow-kit:hooks
+```
+
 Run Claude Code's built-in plugin/marketplace validation:
 
 ```sh
@@ -47,7 +60,7 @@ Strict validation should pass after adding real plugins:
 npm run validate:claude:strict
 ```
 
-Run both:
+Run all local checks, including marketplace validation, `spec-flow-kit` structural validation, MCP smoke tests, hook smoke tests, and Claude plugin validation:
 
 ```sh
 npm run validate

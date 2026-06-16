@@ -33,11 +33,24 @@ Examples:
 
 ## Validation before release
 
-Run:
+Run the full local validation suite:
 
 ```sh
 npm run validate
-claude plugin validate . --strict
+```
+
+This includes:
+
+- marketplace manifest checks;
+- `spec-flow-kit` structural checks for commands, agents, skills, hooks, schemas, templates, and MCP configuration;
+- `spec-flow-kit` MCP state server smoke tests;
+- `spec-flow-kit` hook smoke tests;
+- Claude Code marketplace validation.
+
+Strict Claude validation should also pass before releasing:
+
+```sh
+npm run validate:claude:strict
 ```
 
 When releasing a specific plugin, also run:
@@ -62,19 +75,23 @@ claude plugin tag plugins/<plugin-name> --dry-run
 
 Do not create or push tags unless the release is intentional.
 
-## Future CI
+## Continuous integration
 
-A future GitHub Actions workflow should run:
+The repository includes `.github/workflows/validate.yml`.
 
-```sh
-npm run validate
-claude plugin validate .
-```
-
-After at least one real plugin is added, CI can switch to strict validation:
+CI runs on pushes to `main`, pull requests, and manual dispatch. It always runs repository-owned checks and smoke tests:
 
 ```sh
-claude plugin validate . --strict
+npm run validate:marketplace
+npm run validate:spec-flow-kit
+npm run smoke:spec-flow-kit:mcp
+npm run smoke:spec-flow-kit:hooks
 ```
 
-CI remains a future enhancement for marketplace release automation.
+If the runner has the Claude CLI installed, CI also runs:
+
+```sh
+npm run validate:claude:strict
+```
+
+If the Claude CLI is unavailable, that step is skipped with an explanatory message; local release validation should still run strict Claude validation before publishing or tagging.
