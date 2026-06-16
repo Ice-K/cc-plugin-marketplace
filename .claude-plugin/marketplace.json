@@ -1,0 +1,9 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "cc-plugin-marketplace",
+  "description": "A curated Claude Code plugin marketplace for managing multiple plugins in a single repository.",
+  "owner": {
+    "name": "Ice-K"
+  },
+  "plugins": []
+}
