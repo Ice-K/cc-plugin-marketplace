@@ -12,6 +12,6 @@ This project uses two layers of versioning:
 ### Added
 
 - Initialized Claude Code plugin marketplace skeleton.
-- Added empty marketplace manifest with no plugins yet.
-- Added reserved `plugins/` directory.
+- Added marketplace manifest and reserved plugin directory.
+- Added `spec-flow-kit` as the first planned plugin directory with implementation deferred.
 - Added marketplace documentation and validation scaffolding.

@@ -1,8 +1,10 @@
 # Plugins
 
-This directory is reserved for marketplace plugins.
+This directory contains marketplace plugins.
 
-Current status: no plugins have been created yet.
+## Current plugins
+
+- `spec-flow-kit` — planned specification-driven workflow helpers for Claude Code. Only the base structure exists for now.
 
 Future plugins should use this layout:
 

@@ -1,0 +1,19 @@
+{
+  "_comment": "单个 feature 的状态文件。记录当前阶段、各 gate 摘要、分支元数据、下一步建议和阻塞项。",
+  "featureId": "<FEATURE-ID>",
+  "stage": "draft",
+  "gatesComment": "这里是 feature 级 gate 摘要。详细 gate 信息仍以 gates.json 或命令输出为准。",
+  "gates": {
+    "requirements-ready": "pending",
+    "design-ready": "pending",
+    "plan-ready": "pending",
+    "development-ready": "pending",
+    "verification-passed": "pending"
+  },
+  "branch": null,
+  "gitRef": null,
+  "createdAt": null,
+  "updatedAt": null,
+  "nextAction": null,
+  "blockers": []
+}

@@ -1,0 +1,63 @@
+# spec-flow-kit 默认 SDD 流程定义。
+# 这个文件描述每个阶段的顺序、对应 slash command、阶段 gate 和下一阶段。
+# 用户通常不需要修改；只有当团队希望调整流程顺序或增删阶段时才需要编辑。
+
+name: default-sdd-flow # 流程名称，可按团队习惯修改。
+version: 1 # 文件协议版本，当前保持为 1。
+
+stages:
+  # 初始化 .spec-flow-kit 工作区。
+  - id: init
+    name: 初始化 spec-flow-kit 工作区
+    command: /sfk-init
+    gate: initialized
+    next: requirements
+
+  # 从自然语言需求生成 feature requirements，并默认激活该 feature。
+  - id: requirements
+    name: 需求分析
+    command: /sfk-requirements
+    gate: requirements-ready
+    next: design
+
+  # 切换 active feature。该阶段不修改业务代码，只更新 state.json。
+  - id: use
+    name: 选择 active feature
+    command: /sfk-use
+    gate: active-feature-selected
+    next: design
+
+  # 基于需求、项目上下文和 rules 生成设计、ADR 和测试计划。
+  - id: design
+    name: 系统设计
+    command: /sfk-design
+    gate: design-ready
+    next: plan
+
+  # 将设计拆分为任务，并初始化 traceability。
+  - id: plan
+    name: 任务拆分
+    command: /sfk-plan
+    gate: plan-ready
+    next: development
+
+  # 按任务实现代码和测试，并更新 traceability。
+  - id: development
+    name: 代码实现
+    command: /sfk-development
+    gate: development-ready
+    next: verification
+
+  # 对照验收标准验证实现，并记录 evidence。
+  - id: verification
+    name: 验证
+    command: /sfk-verify
+    gate: verification-passed
+    next: status
+
+  # 查看当前状态、阻塞项、traceability 缺口和下一步。
+  - id: status
+    name: 状态汇总
+    command: /sfk-status
+    gate: null # status 只是查询命令，不需要 gate。
+    next: null

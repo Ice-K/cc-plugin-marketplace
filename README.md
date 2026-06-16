@@ -4,7 +4,13 @@ A curated Claude Code plugin marketplace for managing multiple plugins in a sing
 
 ## Status
 
-This repository currently contains the necessary marketplace skeleton only. No plugins have been created yet.
+This repository contains a Claude Code plugin marketplace skeleton with the first planned plugin directory.
+
+## Plugins
+
+| Plugin | Category | Status | Description |
+| --- | --- | --- | --- |
+| `spec-flow-kit` | `development` | planned | Specification-driven workflow helpers for Claude Code. Implementation will be added later. |
 
 ## Structure
 
@@ -12,13 +18,14 @@ This repository currently contains the necessary marketplace skeleton only. No p
 .claude-plugin/
 └── marketplace.json      # Marketplace manifest
 plugins/
-└── README.md             # Reserved plugin directory; no plugins yet
+├── README.md
+└── spec-flow-kit/        # First planned plugin directory
 docs/                     # Authoring and maintenance documentation
 scripts/                  # Validation scripts
 schemas/                  # Local schema/reference files
 ```
 
-Future plugins should live under `plugins/<plugin-name>/` and include their own `.claude-plugin/plugin.json` manifest.
+Additional plugins should live under `plugins/<plugin-name>/` and include their own `.claude-plugin/plugin.json` manifest.
 
 ## Local validation
 
@@ -34,7 +41,7 @@ Run Claude Code's built-in plugin/marketplace validation:
 npm run validate:claude
 ```
 
-Strict validation is expected to warn while this marketplace intentionally has no plugins:
+Strict validation should pass after adding real plugins:
 
 ```sh
 npm run validate:claude:strict
@@ -62,13 +69,13 @@ List configured marketplaces:
 claude plugin marketplace list
 ```
 
-Install a plugin after plugins are added:
+Install a plugin after its implementation is ready:
 
 ```sh
-claude plugin install <plugin-name>
+claude plugin install spec-flow-kit
 ```
 
-Current note: this marketplace intentionally has no installable plugins yet.
+Current note: `spec-flow-kit` is registered as a planned plugin. Its concrete commands, skills, agents, hooks, and workflow implementation will be added later.
 
 ## How many plugins should one marketplace manage?
 

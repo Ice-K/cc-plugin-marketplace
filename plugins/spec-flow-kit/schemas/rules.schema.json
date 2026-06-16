@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-flow-kit.local/schemas/rules.schema.json",
+  "title": "spec-flow-kit rules",
+  "type": "object",
+  "required": ["version", "priority", "rules"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "priority": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["feature", "project", "team", "organization", "plugin-default"] }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "level", "source", "scope", "appliesTo", "enforcement", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "level": { "type": "string", "enum": ["required", "recommended", "informational"] },
+          "source": { "type": "string" },
+          "sourceLines": { "type": ["string", "null"] },
+          "scope": { "type": "string", "enum": ["feature", "project", "team", "organization", "plugin-default"] },
+          "appliesTo": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "enforcement": {
+            "type": "object",
+            "required": ["mode"],
+            "properties": {
+              "mode": { "type": "string", "enum": ["advisory", "strict"] }
+            },
+            "additionalProperties": false
+          },
+          "status": { "type": "string", "enum": ["proposed", "active", "deprecated"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

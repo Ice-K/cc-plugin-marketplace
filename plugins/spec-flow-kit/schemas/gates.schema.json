@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-flow-kit.local/schemas/gates.schema.json",
+  "title": "spec-flow-kit gates",
+  "type": "object",
+  "required": [
+    "version",
+    "mode",
+    "gates"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "advisory",
+        "strict"
+      ]
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "status",
+          "evidence"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "passed",
+              "blocked",
+              "failed",
+              "waived"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          },
+          "requiredActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "_comment": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "_comment": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

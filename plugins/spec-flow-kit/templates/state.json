@@ -1,0 +1,15 @@
+{
+  "_comment": "spec-flow-kit 全局状态文件。记录当前 active feature、gate 模式、工作区信息和 feature 索引。通常由 /sfk-init、/sfk-requirements、/sfk-use 自动维护，用户只在状态异常时手动修正。",
+  "version": 1,
+  "activeFeature": null,
+  "gateMode": "advisory",
+  "workspace": {
+    "_comment": "当前工作区信息。gitBranch 和 gitRef 只是元数据，不会触发自动切换分支。",
+    "root": ".",
+    "gitBranch": null,
+    "gitRef": null
+  },
+  "featuresComment": "Feature 索引。创建 feature 后会按 FEATURE-ID 增加条目，例如 AUTH-LOCK-001。每个条目应包含 path、stage、branch 和 lastUpdatedAt。",
+  "features": {},
+  "updatedAt": null
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-flow-kit.local/schemas/flow.schema.json",
+  "title": "spec-flow-kit flow",
+  "type": "object",
+  "required": ["name", "version", "stages"],
+  "properties": {
+    "name": { "type": "string" },
+    "version": { "type": "integer", "const": 1 },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "command", "gate"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "command": { "type": "string" },
+          "gate": { "type": ["string", "null"] },
+          "next": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

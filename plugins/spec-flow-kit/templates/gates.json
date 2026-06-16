@@ -1,0 +1,49 @@
+{
+  "_comment": "Gate 状态文件。记录每个阶段是否通过、阻塞、失败或被豁免。MVP 默认 advisory，只提示不阻断。",
+  "version": 1,
+  "mode": "advisory",
+  "gates": {
+    "initialized": {
+      "_comment": "初始化工作区是否完成。",
+      "status": "pending",
+      "evidence": [],
+      "updatedAt": null
+    },
+    "rules-ready": {
+      "_comment": "项目规则是否已经准备好。",
+      "status": "pending",
+      "evidence": [],
+      "updatedAt": null
+    },
+    "requirements-ready": {
+      "_comment": "需求是否足够明确，可以进入设计。",
+      "status": "pending",
+      "evidence": [],
+      "updatedAt": null
+    },
+    "design-ready": {
+      "_comment": "设计是否覆盖需求和关键风险。",
+      "status": "pending",
+      "evidence": [],
+      "updatedAt": null
+    },
+    "plan-ready": {
+      "_comment": "任务是否完成拆分，并已初始化 traceability。",
+      "status": "pending",
+      "evidence": [],
+      "updatedAt": null
+    },
+    "development-ready": {
+      "_comment": "实现是否完成并更新了 traceability。",
+      "status": "pending",
+      "evidence": [],
+      "updatedAt": null
+    },
+    "verification-passed": {
+      "_comment": "验收标准是否已被 evidence 支撑。",
+      "status": "pending",
+      "evidence": [],
+      "updatedAt": null
+    }
+  }
+}

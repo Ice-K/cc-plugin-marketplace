@@ -1,0 +1,42 @@
+# 用户规则索引。
+# rules.yaml 用于把 rules/*.md 中的自然语言规则结构化，方便 Gate、Audit 和命令按范围加载。
+# 注意：自动发现的规则建议先保持 proposed，用户确认后再改为 active。
+
+version: 1 # 文件协议版本，当前保持为 1。
+
+# 规则冲突时的优先级，从高到低。
+priority:
+  - feature # 当前 feature 的临时规则，优先级最高。
+  - project # 当前项目规则。
+  - team # 团队级规则。
+  - organization # 组织级规则。
+  - plugin-default # 插件默认规则，优先级最低。
+
+rules:
+  - id: RULE-STRUCTURE-001 # 规则 ID，建议使用 RULE-<类别>-<序号>。
+    title: 需要识别源码和测试根目录
+    level: recommended # required / recommended / informational。
+    source: .spec-flow-kit/rules/engineering-structure.md # 规则来源文件。
+    sourceLines: null # 可选：来源行号，例如 "12-20"；未知时为 null。
+    scope: project # feature / project / team / organization / plugin-default。
+    appliesTo:
+      - design
+      - development
+      - verification
+    enforcement:
+      mode: advisory # advisory 表示只提示；strict 表示后续可阻断。
+    status: proposed # proposed / active / deprecated。
+
+  - id: RULE-PROCESS-001
+    title: Feature 工作应保持 traceability 更新
+    level: required
+    source: .spec-flow-kit/rules/development-process.md
+    sourceLines: null
+    scope: project
+    appliesTo:
+      - plan
+      - development
+      - verification
+    enforcement:
+      mode: advisory
+    status: active

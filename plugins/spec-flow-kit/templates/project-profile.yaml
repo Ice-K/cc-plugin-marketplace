@@ -1,0 +1,45 @@
+# 项目画像配置。
+# /sfk-init 会尽量自动探测这些值；用户可以在初始化后手动修正。
+# 这些命令会被 /sfk-verify 用来运行本地质量检查并生成 evidence。
+
+version: 1 # 文件协议版本，当前保持为 1。
+
+project:
+  name: null # 项目名称；例如 my-service。无法自动识别时可手动填写。
+  type: unknown # 项目类型；例如 web-api、frontend-app、cli、library。
+  language: unknown # 主要语言；例如 typescript、python、go、java。
+  packageManager: unknown # 包管理器；例如 pnpm、npm、yarn、pip、uv、go、maven。
+
+commands:
+  install: null # 安装依赖命令；例如 pnpm install。MVP 默认不会自动运行。
+  lint: null # 静态检查命令；例如 pnpm lint。
+  typecheck: null # 类型检查命令；例如 pnpm typecheck。
+  unitTest: null # 单元测试命令；例如 pnpm test。
+  build: null # 构建命令；例如 pnpm build。
+  e2e: null # 端到端测试命令；例如 pnpm test:e2e。
+
+rules:
+  # 项目规则文件列表，是后续命令加载规则正文的入口。
+  # /sfk-design、/sfk-plan、/sfk-development、/sfk-verify 和 /sfk-audit 会按需读取这些文件。
+  # 如果用户新增、删除或重命名 rules/*.md，后续 /sfk-rules-sync 应同步维护这里。
+  # 插件不应无提示删除用户手动添加且文件仍存在的条目。
+  files:
+    - .spec-flow-kit/rules/engineering-structure.md
+    - .spec-flow-kit/rules/development-process.md
+    - .spec-flow-kit/rules/coding-style.md
+    - .spec-flow-kit/rules/testing-rules.md
+
+environments:
+  local:
+    run: null # 本地启动命令；例如 pnpm dev。
+    verify: null # 本地快速验证命令；例如 pnpm test。
+
+  staging:
+    deploy: null # staging 部署命令；MVP 不自动执行。
+    verify: null # staging 验证命令；例如 smoke test。
+    requiresApproval: true # 是否需要用户显式确认。
+
+  production:
+    deploy: manual # production 默认 manual，表示只生成 runbook，不自动执行。
+    requiresApproval: true # production 必须显式确认。
+    rollback: null # 回滚命令或 runbook 路径。

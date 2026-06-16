@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-flow-kit.local/schemas/state.schema.json",
+  "title": "spec-flow-kit state",
+  "type": "object",
+  "required": [
+    "version",
+    "activeFeature",
+    "gateMode",
+    "workspace",
+    "features"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "activeFeature": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gateMode": {
+      "type": "string",
+      "enum": [
+        "advisory",
+        "strict"
+      ]
+    },
+    "workspace": {
+      "type": "object",
+      "required": [
+        "root"
+      ],
+      "properties": {
+        "root": {
+          "type": "string"
+        },
+        "gitBranch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "gitRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "_comment": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "path",
+          "stage"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "stage": {
+            "type": "string"
+          },
+          "branch": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lastUpdatedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "updatedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "_comment": {
+      "type": "string"
+    },
+    "featuresComment": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

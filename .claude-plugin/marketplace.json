@@ -5,5 +5,12 @@
   "owner": {
     "name": "Ice-K"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "spec-flow-kit",
+      "description": "Specification-driven workflow helpers for planning, proposing, applying, and archiving structured changes in Claude Code.",
+      "category": "development",
+      "source": "./plugins/spec-flow-kit"
+    }
+  ]
 }

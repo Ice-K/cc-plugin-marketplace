@@ -4,7 +4,7 @@ Thanks for helping maintain this Claude Code plugin marketplace.
 
 ## Current phase
 
-The repository is currently an initialized marketplace skeleton. Do not add placeholder plugins just to fill the marketplace. Add a plugin only when it has a real purpose, documentation, and validation coverage.
+The repository now contains its first planned plugin directory. Add more plugins only when they have a real purpose, documentation, and validation coverage.
 
 ## Adding plugins
 
@@ -42,7 +42,7 @@ If you change marketplace or plugin manifests, also run Claude Code's built-in v
 claude plugin validate .
 ```
 
-Strict validation currently warns because the skeleton has no plugins yet. Enable strict validation after adding the first real plugin:
+Strict validation should pass after adding real plugins:
 
 ```sh
 claude plugin validate . --strict

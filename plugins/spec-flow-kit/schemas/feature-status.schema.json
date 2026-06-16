@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-flow-kit.local/schemas/feature-status.schema.json",
+  "title": "spec-flow-kit feature status",
+  "type": "object",
+  "required": [
+    "featureId",
+    "stage",
+    "gates",
+    "blockers"
+  ],
+  "properties": {
+    "featureId": {
+      "type": "string"
+    },
+    "stage": {
+      "type": "string"
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "passed",
+          "blocked",
+          "failed",
+          "waived"
+        ]
+      }
+    },
+    "branch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gitRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "createdAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "nextAction": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "_comment": {
+      "type": "string"
+    },
+    "gatesComment": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

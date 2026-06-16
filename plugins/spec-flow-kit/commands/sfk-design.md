@@ -1,0 +1,95 @@
+---
+description: 基于需求创建系统设计、ADR 和测试计划
+argument-hint: [FEATURE-ID]
+---
+
+# /sfk-design
+
+你正在执行 `spec-flow-kit` 的设计命令。
+
+## 目标
+
+基于 feature requirements、项目上下文和 rules，生成设计文档、ADR 和测试计划。
+
+## 输入
+
+用户参数：`$ARGUMENTS`
+
+Feature 解析顺序：
+
+1. 如果用户显式传入 `<FEATURE-ID>`，使用该 feature。
+2. 否则使用 `.spec-flow-kit/state.json` 中的 `activeFeature`。
+3. 如果没有 active feature，提示运行 `/sfk-use <FEATURE-ID>`。
+
+## 前置条件
+
+- `.spec-flow-kit/` 已初始化。
+- 目标 feature 存在。
+- `requirements-ready` 为 `passed` 或 `waived`；如果不是，说明阻塞原因。
+
+## 必须遵守
+
+- 默认使用中文编写 Markdown 产物。
+- 不修改业务代码。
+- 默认不运行 Bash。
+- 不覆盖用户已手动修改的设计文档；如果文件已存在，先读取并增量更新或询问用户。
+- 设计必须覆盖 requirements 中的验收标准、边界情况、风险和非功能需求。
+- 必须读取 `project-profile.yaml` 中 `rules.files` 指向的相关规则。
+
+## 执行步骤
+
+1. 解析目标 feature。
+2. 读取：
+   - `.spec-flow-kit/state.json`
+   - `.spec-flow-kit/gates.json`
+   - `.spec-flow-kit/project-profile.yaml`
+   - `.spec-flow-kit/rules.yaml`
+   - `.spec-flow-kit/features/<FEATURE-ID>/requirements.md`
+   - `project-profile.yaml` 中与设计相关的 `rules.files`
+3. 只读分析相关源码结构和项目配置。
+4. 生成或更新：
+
+```text
+.spec-flow-kit/features/<FEATURE-ID>/design.md
+.spec-flow-kit/features/<FEATURE-ID>/adr.md
+.spec-flow-kit/features/<FEATURE-ID>/test-plan.md
+```
+
+5. 更新 feature `status.json`。
+6. 更新 `gates.json` 中的 `design-ready`：
+   - 设计完整时标记 `passed`。
+   - 缺少关键设计时标记 `blocked`，并写明 requiredActions。
+7. 追加 evidence，类型通常为 `claude-inferred`，除非用户明确确认。
+
+## 设计内容必须包含
+
+- 当前系统上下文。
+- 设计方案。
+- 接口和契约。
+- 数据模型变化。
+- 错误处理。
+- 安全和隐私影响。
+- 可观测性。
+- 备选方案。
+- 发布和回滚说明。
+- 待澄清问题。
+
+## 输出要求
+
+```text
+设计结果
+
+Feature: <FEATURE-ID>
+Gate: design-ready = passed / blocked
+
+已生成或更新：
+- design.md
+- adr.md
+- test-plan.md
+
+阻塞项：
+- ...
+
+下一步：
+- /sfk-plan <FEATURE-ID>
+```

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-flow-kit.local/schemas/project-profile.schema.json",
+  "title": "spec-flow-kit project profile",
+  "type": "object",
+  "required": ["version", "project", "commands", "rules", "environments"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "project": {
+      "type": "object",
+      "required": ["name", "type", "language", "packageManager"],
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "type": { "type": "string" },
+        "language": { "type": "string" },
+        "packageManager": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "commands": {
+      "type": "object",
+      "properties": {
+        "install": { "type": ["string", "null"] },
+        "lint": { "type": ["string", "null"] },
+        "typecheck": { "type": ["string", "null"] },
+        "unitTest": { "type": ["string", "null"] },
+        "build": { "type": ["string", "null"] },
+        "e2e": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    },
+    "rules": {
+      "type": "object",
+      "required": ["files"],
+      "properties": {
+        "files": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "environments": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "run": { "type": ["string", "null"] },
+          "deploy": { "type": ["string", "null"] },
+          "verify": { "type": ["string", "null"] },
+          "rollback": { "type": ["string", "null"] },
+          "requiresApproval": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

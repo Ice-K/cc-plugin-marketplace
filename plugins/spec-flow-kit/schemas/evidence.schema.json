@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec-flow-kit.local/schemas/evidence.schema.json",
+  "title": "spec-flow-kit evidence record",
+  "type": "object",
+  "required": ["id", "featureId", "stage", "type", "timestamp", "generatedBy", "summary"],
+  "properties": {
+    "id": { "type": "string" },
+    "featureId": { "type": "string" },
+    "stage": { "type": "string" },
+    "type": { "type": "string", "enum": ["actual-command", "external-ci", "user-confirmed", "manual-review", "claude-inferred"] },
+    "command": { "type": ["string", "null"] },
+    "exitCode": { "type": ["integer", "null"] },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "gitRef": { "type": ["string", "null"] },
+    "generatedBy": { "type": "string", "enum": ["user", "claude", "hook", "script", "ci"] },
+    "summary": { "type": "string" },
+    "artifacts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    }
+  },
+  "additionalProperties": false
+}
