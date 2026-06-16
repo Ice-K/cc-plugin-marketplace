@@ -19,6 +19,10 @@ This project uses two layers of versioning:
 - Added optional advisory hooks for stop-time status summaries and post-edit traceability reminders.
 - Added MVP `spec-flow-kit` agents for requirements analysis, system design, and verification auditing.
 - Added MVP `spec-flow-kit` skills for SDD core workflow, traceability/evidence, and rules governance.
+- Added `spec-flow-kit` audit, next-action, delivery, and deployment runbook prompt commands.
+- Added waiver schema/template support for explicit gate, rule, traceability, evidence, task, and requirement waivers.
+- Added optional rules-compliance advisory hook and strict-mode gate hook scripts for edit, test, and deploy checks.
+- Added optional local MCP state server tools for spec-flow-kit state, traceability, gate, evidence, and next-action operations.
 - Added marketplace documentation and validation scaffolding.
 
 ### Changed

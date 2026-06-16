@@ -4,7 +4,7 @@ Claude Code 的本地规范驱动交付治理插件。
 
 ## 状态
 
-实验性 / 开发中。本插件目前包含 manifest、实施方案、MVP templates、schemas、完整 MVP slash command prompt flow、MVP agents、MVP skills，以及可选提示型 hooks。MCP servers 尚未配置。
+实验性 / 开发中。本插件目前包含 manifest、实施方案、MVP templates、schemas、完整 MVP slash command prompt flow、MVP agents、MVP skills、可选提示型 hooks，以及可选本地 MCP 状态服务。
 
 当前实施方案见：[`docs/spec-flow-kit-插件方案.md`](docs/spec-flow-kit-%E6%8F%92%E4%BB%B6%E6%96%B9%E6%A1%88.md)。
 
@@ -37,9 +37,13 @@ Claude Code 的本地规范驱动交付治理插件。
 | `/sfk-development` | `/spec-flow-kit:sfk-development` | 实现任务并更新 traceability |
 | `/sfk-verify` | `/spec-flow-kit:sfk-verify` | 验证验收标准并记录 evidence |
 | `/sfk-rules-sync` | `/spec-flow-kit:sfk-rules-sync` | 同步规则索引和规则文件列表 |
+| `/sfk-audit` | `/spec-flow-kit:sfk-audit` | 审计 traceability、evidence、rules、gate 和 waiver 缺口 |
+| `/sfk-next` | `/spec-flow-kit:sfk-next` | 推荐当前 feature 的下一步动作 |
+| `/sfk-deliver` | `/spec-flow-kit:sfk-deliver` | 生成交付准备材料、release notes、风险说明和回滚计划 |
+| `/sfk-deploy` | `/spec-flow-kit:sfk-deploy` | 生成部署 runbook、环境检查和回滚步骤 |
 | `/sfk-status` | `/spec-flow-kit:sfk-status` | 查看当前 feature 状态、gate、缺口和下一步 |
 
-后续可能增加 `/sfk-audit`、`/sfk-next`、`/sfk-deliver` 和 `/sfk-deploy`。
+后续可选增加本地 MCP 状态服务和企业级治理集成。
 
 ## 计划生成的本地工作区
 
@@ -68,6 +72,7 @@ MVP 会生成并维护如下文件：
         ├── traceability.md
         ├── traceability.json
         ├── evidence.jsonl
+        ├── waivers.json
         ├── status.json
         ├── runs.jsonl
         └── reports/
@@ -89,12 +94,27 @@ Markdown 文件面向人阅读，默认使用中文。JSON / JSONL / YAML 文件
 
 ## 可选提示型 Hooks
 
-本插件包含两个 Claude Code advisory hooks：
+本插件包含三个默认 advisory hook 脚本，以及若干 strict-mode gate 脚本（默认不阻断）：
 
 - `Stop`: 读取当前 `.spec-flow-kit/` 状态，并输出 active feature 的 stage、gate、traceability 和 evidence 摘要。
-- `PostToolUse` for `Edit|Write|NotebookEdit`: 在文件编辑后提示是否需要维护 traceability。
+- `PostToolUse` for `Edit|Write|NotebookEdit`: 在文件编辑后提示是否需要维护 traceability，并提示 active required/strict rules 可能需要复核。
 
 这些 hooks 只读、非阻断、不自动写入文件、不运行测试或部署命令，也不会把 Claude 推断写成 actual evidence。Hook 输出只包含安全元数据和建议，不打印文件内容、evidence command、secret、token、private key 或 credentials。
+
+## 可选本地 MCP 状态服务
+
+本插件提供一个可选 stdio MCP server：`spec-flow-kit`，配置见 `.mcp.json`，入口为 `mcp/sfk-state-server.js`。
+
+它暴露只读状态查询和受控状态写入工具：
+
+- `sfk.get_state`
+- `sfk.get_current_stage`
+- `sfk.get_traceability`
+- `sfk.update_gate`
+- `sfk.record_evidence`
+- `sfk.next_action`
+
+MCP 工具只操作当前工作目录下的 `.spec-flow-kit/` 文件协议；`sfk.record_evidence` 不应被用于记录伪造命令输出或 secrets。
 
 ## 当前结构
 
@@ -102,6 +122,7 @@ Markdown 文件面向人阅读，默认使用中文。JSON / JSONL / YAML 文件
 spec-flow-kit/
 ├── .claude-plugin/
 │   └── plugin.json
+├── .mcp.json
 ├── commands/
 │   ├── sfk-init.md
 │   ├── sfk-requirements.md
@@ -111,6 +132,10 @@ spec-flow-kit/
 │   ├── sfk-development.md
 │   ├── sfk-verify.md
 │   ├── sfk-rules-sync.md
+│   ├── sfk-audit.md
+│   ├── sfk-next.md
+│   ├── sfk-deliver.md
+│   ├── sfk-deploy.md
 │   └── sfk-status.md
 ├── agents/
 │   ├── requirements-analyst.md
@@ -126,7 +151,13 @@ spec-flow-kit/
 ├── hooks/
 │   ├── hooks.json
 │   ├── stop-summary.js
-│   └── post-edit-trace.js
+│   ├── post-edit-trace.js
+│   ├── rules-compliance-check.js
+│   ├── pre-edit-gate.js
+│   ├── pre-test-gate.js
+│   └── pre-deploy-gate.js
+├── mcp/
+│   └── sfk-state-server.js
 ├── schemas/
 ├── templates/
 ├── docs/
@@ -146,7 +177,9 @@ spec-flow-kit/
 6. 实现 `/sfk-rules-sync`，同步规则索引和规则文件列表。✅
 7. 添加 MVP agents：`requirements-analyst`、`system-designer`、`verification-auditor`。✅
 8. 添加 MVP skills：`sdd-core`、`traceability-evidence`、`rules-governance`。✅
-9. 后续增加 audit、strict gates、delivery readiness、deployment runbooks 和可选本地 MCP 状态服务。
+9. 增加 audit、strict gate 脚本、waiver 协议、delivery readiness 和 deployment runbook 命令。✅
+10. 添加可选本地 MCP 状态服务。✅
+11. 后续增加企业级治理集成。
 
 ## 说明
 
@@ -155,5 +188,5 @@ spec-flow-kit/
 - `/sfk-development` 和 `/sfk-verify` 是 prompt-only workflow；它们依赖项目本地文件协议、traceability schema、evidence schema 和真实命令/CI/用户确认 evidence。
 - MVP agents 已实现：`requirements-analyst`、`system-designer`、`verification-auditor`。
 - MVP skills 已实现：`sdd-core`、`traceability-evidence`、`rules-governance`。
-- hooks 已提供可选提示型 MVP：`stop-summary.js` 和 `post-edit-trace.js`。
-- MCP servers 尚未配置。
+- hooks 已提供可选提示型 MVP：`stop-summary.js`、`post-edit-trace.js` 和 `rules-compliance-check.js`；strict gate 脚本已提供但默认不阻断。
+- MCP server 已提供可选本地状态服务：`spec-flow-kit`。

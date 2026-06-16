@@ -10,7 +10,7 @@ This repository hosts a curated Claude Code plugin marketplace with one experime
 
 | Plugin | Category | Status | Description |
 | --- | --- | --- | --- |
-| `spec-flow-kit` | `development` | experimental MVP | Local spec-driven delivery governance for Claude Code with prompt-only workflow commands, MVP agents/skills, templates, schemas, traceability/evidence support, and optional advisory hooks. |
+| `spec-flow-kit` | `development` | experimental MVP | Local spec-driven delivery governance for Claude Code with prompt-only workflow commands, MVP agents/skills, templates, schemas, traceability/evidence support, optional advisory hooks, and optional local MCP state tools. |
 
 ## Structure
 
@@ -75,7 +75,7 @@ Install the experimental MVP plugin for local testing:
 claude plugin install spec-flow-kit
 ```
 
-Current note: `spec-flow-kit` currently provides MVP prompt commands, MVP agents/skills, `.spec-flow-kit/` templates/schemas, traceability/evidence workflow support, and optional advisory hooks. MCP servers, strict gates, audit, delivery, and deployment workflows remain future work.
+Current note: `spec-flow-kit` currently provides MVP prompt commands, MVP agents/skills, `.spec-flow-kit/` templates/schemas, traceability/evidence workflow support, optional advisory/strict-mode hook scripts, audit/delivery/deploy runbook commands, waiver protocol support, and optional local MCP state tools. Enterprise governance integrations remain future work.
 
 ## How many plugins should one marketplace manage?
 

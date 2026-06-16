@@ -1,0 +1,134 @@
+---
+description: 生成 feature 交付准备材料和风险说明
+argument-hint: "[FEATURE-ID]"
+---
+
+# /sfk-deliver
+
+你正在执行 `spec-flow-kit` 的交付准备命令。
+
+## 目标
+
+基于已完成或接近完成的 feature artifacts，生成交付准备材料：release notes、delivery plan、rollback plan 和 risk review。此命令只生成交付文档，不执行发布、部署或生产操作。
+
+## 输入
+
+用户参数：`$ARGUMENTS`
+
+支持：
+
+```text
+/sfk-deliver
+/sfk-deliver <FEATURE-ID>
+```
+
+Feature 解析顺序：
+
+1. 显式 `<FEATURE-ID>`。
+2. `state.json` 中的 `activeFeature`。
+3. 如果没有 active feature，提示运行 `/sfk-use <FEATURE-ID>`。
+
+## 前置条件
+
+建议满足：
+
+- `requirements-ready` 为 `passed` 或 `waived`。
+- `design-ready` 为 `passed` 或 `waived`。
+- `plan-ready` 为 `passed` 或 `waived`。
+- `development-ready` 为 `passed` 或 `waived`。
+- `verification-passed` 最好为 `passed`；如果不是，交付材料必须明确标注验证缺口。
+
+## 必须遵守
+
+- 不执行 deploy、release、publish、tag、production、数据迁移或破坏性命令。
+- 不伪造测试结果、CI 结果、用户确认或命令输出。
+- 不把 Claude 推断当成 actual evidence。
+- 不输出 secrets、token、password、private key、credentials。
+- 默认使用中文编写 Markdown 产物。
+- 如果验证缺口存在，必须在 risk review 和 delivery plan 中明确标记。
+
+## 读取文件
+
+按需读取：
+
+- `.spec-flow-kit/state.json`
+- `.spec-flow-kit/gates.json`
+- `.spec-flow-kit/project-profile.yaml`
+- `.spec-flow-kit/rules.yaml`
+- `.spec-flow-kit/features/<FEATURE-ID>/requirements.md`
+- `.spec-flow-kit/features/<FEATURE-ID>/design.md`
+- `.spec-flow-kit/features/<FEATURE-ID>/adr.md`
+- `.spec-flow-kit/features/<FEATURE-ID>/tasks.md`
+- `.spec-flow-kit/features/<FEATURE-ID>/test-plan.md`
+- `.spec-flow-kit/features/<FEATURE-ID>/verification.md`
+- `.spec-flow-kit/features/<FEATURE-ID>/traceability.json`
+- `.spec-flow-kit/features/<FEATURE-ID>/evidence.jsonl`
+- `.spec-flow-kit/features/<FEATURE-ID>/status.json`
+- `.spec-flow-kit/features/<FEATURE-ID>/waivers.json`（如果存在）
+
+## 写入文件
+
+创建或更新：
+
+```text
+.spec-flow-kit/features/<FEATURE-ID>/release-notes.md
+.spec-flow-kit/features/<FEATURE-ID>/delivery-plan.md
+.spec-flow-kit/features/<FEATURE-ID>/rollback-plan.md
+.spec-flow-kit/features/<FEATURE-ID>/risk-review.md
+```
+
+如果文件已存在，不要盲目覆盖用户手写内容；先读取并保留有价值的手写部分，或在输出中说明需要人工合并。
+
+## 文档要求
+
+### release-notes.md
+
+包含：
+
+- Feature 摘要。
+- 用户可见变化。
+- 非目标。
+- 兼容性影响。
+- 验证摘要。
+- 已知限制。
+
+### delivery-plan.md
+
+包含：
+
+- 交付范围。
+- 前置检查。
+- 验证要求。
+- 交付步骤（文档化，不执行）。
+- 负责人/确认项占位。
+- Go / No-Go 条件。
+
+### rollback-plan.md
+
+包含：
+
+- 回滚触发条件。
+- 回滚策略。
+- 数据或配置影响。
+- 验证回滚成功的方法。
+- 需要人工确认的步骤。
+
+### risk-review.md
+
+包含：
+
+- 功能风险。
+- 测试风险。
+- 安全/隐私风险。
+- 运维/发布风险。
+- 未关闭 traceability/evidence/rule/waiver 缺口。
+
+## 状态更新
+
+如果交付材料生成成功，可在 `status.json` 中把 `nextAction` 设置为：
+
+```text
+/sfk-deploy <FEATURE-ID>
+```
+
+不要把任何 deploy gate 标记为 passed；部署准备由 `/sfk-deploy` 生成 runbook。

@@ -1,0 +1,6 @@
+{
+  "spec-flow-kit": {
+    "command": "node",
+    "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/sfk-state-server.js"]
+  }
+}

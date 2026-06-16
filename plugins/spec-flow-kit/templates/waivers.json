@@ -1,0 +1,5 @@
+{
+  "_comment": "Feature waiver 模板。waiver 用于记录用户显式豁免某个 gate、rule、traceability 或 evidence 缺口。不要自动创建或批准 waiver。",
+  "version": 1,
+  "waivers": []
+}
