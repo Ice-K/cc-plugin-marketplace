@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "spec-flow-kit",
-      "description": "Specification-driven workflow helpers for planning, proposing, applying, and archiving structured changes in Claude Code.",
+      "description": "Experimental local spec-driven delivery governance for Claude Code with prompt-only workflow commands, templates, schemas, traceability/evidence support, and optional advisory hooks.",
       "category": "development",
       "source": "./plugins/spec-flow-kit"
     }

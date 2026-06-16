@@ -4,7 +4,7 @@ Thanks for helping maintain this Claude Code plugin marketplace.
 
 ## Current phase
 
-The repository now contains its first planned plugin directory. Add more plugins only when they have a real purpose, documentation, and validation coverage.
+The repository now contains its first experimental MVP plugin. Add more plugins only when they have a real purpose, documentation, and validation coverage.
 
 ## Adding plugins
 

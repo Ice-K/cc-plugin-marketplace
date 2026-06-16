@@ -1,0 +1,28 @@
+{
+  "description": "Optional advisory hooks for spec-flow-kit status summaries and traceability reminders.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/stop-summary.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/post-edit-trace.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

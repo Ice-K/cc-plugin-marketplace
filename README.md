@@ -4,13 +4,13 @@ A curated Claude Code plugin marketplace for managing multiple plugins in a sing
 
 ## Status
 
-This repository contains a Claude Code plugin marketplace skeleton with the first planned plugin directory.
+This repository hosts a curated Claude Code plugin marketplace with one experimental MVP plugin: `spec-flow-kit`.
 
 ## Plugins
 
 | Plugin | Category | Status | Description |
 | --- | --- | --- | --- |
-| `spec-flow-kit` | `development` | planned | Specification-driven workflow helpers for Claude Code. Implementation will be added later. |
+| `spec-flow-kit` | `development` | experimental MVP | Local spec-driven delivery governance for Claude Code with prompt-only workflow commands, templates, schemas, traceability/evidence support, and optional advisory hooks. |
 
 ## Structure
 
@@ -19,7 +19,7 @@ This repository contains a Claude Code plugin marketplace skeleton with the firs
 └── marketplace.json      # Marketplace manifest
 plugins/
 ├── README.md
-└── spec-flow-kit/        # First planned plugin directory
+└── spec-flow-kit/        # Experimental MVP plugin
 docs/                     # Authoring and maintenance documentation
 scripts/                  # Validation scripts
 schemas/                  # Local schema/reference files
@@ -69,13 +69,13 @@ List configured marketplaces:
 claude plugin marketplace list
 ```
 
-Install a plugin after its implementation is ready:
+Install the experimental MVP plugin for local testing:
 
 ```sh
 claude plugin install spec-flow-kit
 ```
 
-Current note: `spec-flow-kit` is registered as a planned plugin. Its concrete commands, skills, agents, hooks, and workflow implementation will be added later.
+Current note: `spec-flow-kit` currently provides MVP prompt commands, `.spec-flow-kit/` templates/schemas, traceability/evidence workflow support, and optional advisory hooks. Agents, skills, MCP servers, strict gates, audit, delivery, and deployment workflows remain future work.
 
 ## How many plugins should one marketplace manage?
 
@@ -88,7 +88,7 @@ Practical guidance:
 - With good automation and clear categories, 30-80 plugins can still work.
 - Above 80-100 plugins, strongly consider splitting by domain.
 
-For this repository, the recommended path is to start empty, then add 3-10 high-quality plugins before growing further.
+For this repository, the recommended path is to continue hardening `spec-flow-kit` as the first experimental plugin, then add more high-quality plugins once they have clear documentation and validation coverage.
 
 ## Documentation
 

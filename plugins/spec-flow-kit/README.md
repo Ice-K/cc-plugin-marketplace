@@ -4,7 +4,7 @@ Claude Code 的本地规范驱动交付治理插件。
 
 ## 状态
 
-实验性 / 开发中。本插件目前包含 manifest、实施方案、MVP templates、schemas，以及完整 MVP slash command prompt flow。Agents、skills、hooks 还未实现。
+实验性 / 开发中。本插件目前包含 manifest、实施方案、MVP templates、schemas、完整 MVP slash command prompt flow，以及可选提示型 hooks。Agents、skills 还未实现，MCP servers 尚未配置。
 
 当前实施方案见：[`docs/spec-flow-kit-插件方案.md`](docs/spec-flow-kit-%E6%8F%92%E4%BB%B6%E6%96%B9%E6%A1%88.md)。
 
@@ -86,6 +86,15 @@ Markdown 文件面向人阅读，默认使用中文。JSON / JSONL / YAML 文件
 - secrets、token、private key、credentials 不应写入 reports 或 evidence 文件。
 - 如果未来支持生产部署，默认只生成 runbook；除非用户显式确认，否则不执行。
 
+## 可选提示型 Hooks
+
+本插件包含两个 Claude Code advisory hooks：
+
+- `Stop`: 读取当前 `.spec-flow-kit/` 状态，并输出 active feature 的 stage、gate、traceability 和 evidence 摘要。
+- `PostToolUse` for `Edit|Write|NotebookEdit`: 在文件编辑后提示是否需要维护 traceability。
+
+这些 hooks 只读、非阻断、不自动写入文件、不运行测试或部署命令，也不会把 Claude 推断写成 actual evidence。Hook 输出只包含安全元数据和建议，不打印文件内容、evidence command、secret、token、private key 或 credentials。
+
 ## 当前结构
 
 ```text
@@ -104,6 +113,9 @@ spec-flow-kit/
 ├── agents/
 ├── skills/
 ├── hooks/
+│   ├── hooks.json
+│   ├── stop-summary.js
+│   └── post-edit-trace.js
 ├── schemas/
 ├── templates/
 ├── docs/
@@ -119,7 +131,7 @@ spec-flow-kit/
 2. 添加 `.spec-flow-kit/` 的 MVP templates 和 schemas。✅
 3. 实现 `/sfk-init`、`/sfk-requirements`、`/sfk-use`、`/sfk-design`、`/sfk-plan` 和 `/sfk-status`。✅
 4. 实现 `/sfk-development` 和 `/sfk-verify`，支持 traceability 和 evidence 更新。✅
-5. 添加可选提示型 hooks。
+5. 添加可选提示型 hooks。✅
 6. 后续增加 audit、`/sfk-rules-sync`、strict gates、delivery readiness、deployment runbooks 和可选本地 MCP 状态服务。
 
 ## 说明
@@ -128,5 +140,5 @@ spec-flow-kit/
 - `/sfk-development` 和 `/sfk-verify` 是 prompt-only workflow；它们依赖项目本地文件协议、traceability schema、evidence schema 和真实命令/CI/用户确认 evidence。
 - agents 尚未实现。
 - skills 尚未实现。
-- hooks 尚未实现。
+- hooks 已提供可选提示型 MVP：`stop-summary.js` 和 `post-edit-trace.js`。
 - MCP servers 尚未配置。

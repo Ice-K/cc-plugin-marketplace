@@ -1472,6 +1472,22 @@ Hooks 是治理层的重要实现，但 MVP 不默认启用阻断型 hooks。
 | `stop-summary.js` | Stop | all | advisory | 否 | 会话结束时输出当前阶段、已通过 gate、阻塞项、规范违规项和下一步建议 |
 | `post-edit-trace.js` | PostToolUse | Edit / Write / NotebookEdit | advisory | 否 | 代码修改后提示是否需要关联 feature/task/requirement |
 
+MVP hook 注册文件：
+
+```text
+plugins/spec-flow-kit/hooks/hooks.json
+```
+
+注册约定：
+
+- `Stop` 事件执行 `node "${CLAUDE_PLUGIN_ROOT}/hooks/stop-summary.js"`。
+- `PostToolUse` 事件使用 matcher `Edit|Write|NotebookEdit`，执行 `node "${CLAUDE_PLUGIN_ROOT}/hooks/post-edit-trace.js"`。
+- hooks 通过 stdout 返回 `hookSpecificOutput.additionalContext`，只向 Claude 上下文追加提示。
+- hooks 正常和可恢复异常路径都应使用 exit code `0`。
+- MVP hooks 不使用 exit code `2`，不输出 `decision: "block"`，不自动写入文件。
+- hooks 只读取 `.spec-flow-kit/` 的 state、gates、status、traceability 和 evidence 摘要，不读取 transcript 或源码内容。
+- hooks 不输出文件内容、evidence command、secret、token、private key 或 credentials。
+
 ### 16.2 后续 hooks
 
 | Hook | Claude Code 事件 | Matcher | 默认模式 | 是否阻断 | 作用 |

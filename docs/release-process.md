@@ -77,4 +77,4 @@ After at least one real plugin is added, CI can switch to strict validation:
 claude plugin validate . --strict
 ```
 
-CI is intentionally deferred in the initial skeleton.
+CI remains a future enhancement for marketplace release automation.

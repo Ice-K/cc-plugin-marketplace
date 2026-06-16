@@ -1,7 +1,7 @@
 {
   "name": "spec-flow-kit",
   "version": "0.1.0",
-  "description": "Local spec-driven delivery governance for Claude Code with planned requirements, design, traceability, evidence, and verification workflows.",
+  "description": "Experimental local spec-driven delivery governance for Claude Code with prompt-only SDD workflow commands, templates, schemas, traceability/evidence support, and optional advisory hooks.",
   "author": {
     "name": "Ice-K"
   }

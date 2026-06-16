@@ -11,7 +11,14 @@ This project uses two layers of versioning:
 
 ### Added
 
-- Initialized Claude Code plugin marketplace skeleton.
-- Added marketplace manifest and reserved plugin directory.
-- Added `spec-flow-kit` as the first planned plugin directory with implementation deferred.
+- Initialized Claude Code plugin marketplace structure and marketplace manifest.
+- Added `spec-flow-kit` as the first experimental MVP plugin.
+- Added `spec-flow-kit` prompt-only slash command flow for init, requirements, use, design, plan, development, verify, and status.
+- Added `.spec-flow-kit/` templates and schemas for local state, gates, rules, traceability, evidence, and feature status.
+- Added traceability and evidence workflow support for local spec-driven delivery governance.
+- Added optional advisory hooks for stop-time status summaries and post-edit traceability reminders.
 - Added marketplace documentation and validation scaffolding.
+
+### Changed
+
+- Updated marketplace and plugin metadata to reflect current MVP maturity instead of planned-only skeleton status.
