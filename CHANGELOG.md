@@ -17,6 +17,8 @@ This project uses two layers of versioning:
 - Added `.spec-flow-kit/` templates and schemas for local state, gates, rules, traceability, evidence, and feature status.
 - Added traceability and evidence workflow support for local spec-driven delivery governance.
 - Added optional advisory hooks for stop-time status summaries and post-edit traceability reminders.
+- Added MVP `spec-flow-kit` agents for requirements analysis, system design, and verification auditing.
+- Added MVP `spec-flow-kit` skills for SDD core workflow, traceability/evidence, and rules governance.
 - Added marketplace documentation and validation scaffolding.
 
 ### Changed

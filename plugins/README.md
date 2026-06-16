@@ -4,7 +4,7 @@ This directory contains marketplace plugins.
 
 ## Current plugins
 
-- `spec-flow-kit` — experimental MVP for local spec-driven delivery governance in Claude Code. Includes prompt-only slash commands, templates, schemas, traceability/evidence workflow support, and optional advisory hooks; agents, skills, MCP servers, and strict gates remain future work.
+- `spec-flow-kit` — experimental MVP for local spec-driven delivery governance in Claude Code. Includes prompt-only slash commands, MVP agents/skills, templates, schemas, traceability/evidence workflow support, and optional advisory hooks; MCP servers, strict gates, audit, delivery, and deployment workflows remain future work.
 
 Future plugins should use this layout:
 

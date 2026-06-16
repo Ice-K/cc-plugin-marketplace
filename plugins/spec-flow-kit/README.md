@@ -4,7 +4,7 @@ Claude Code 的本地规范驱动交付治理插件。
 
 ## 状态
 
-实验性 / 开发中。本插件目前包含 manifest、实施方案、MVP templates、schemas、完整 MVP slash command prompt flow，以及可选提示型 hooks。Agents、skills 还未实现，MCP servers 尚未配置。
+实验性 / 开发中。本插件目前包含 manifest、实施方案、MVP templates、schemas、完整 MVP slash command prompt flow、MVP agents、MVP skills，以及可选提示型 hooks。MCP servers 尚未配置。
 
 当前实施方案见：[`docs/spec-flow-kit-插件方案.md`](docs/spec-flow-kit-%E6%8F%92%E4%BB%B6%E6%96%B9%E6%A1%88.md)。
 
@@ -113,7 +113,16 @@ spec-flow-kit/
 │   ├── sfk-rules-sync.md
 │   └── sfk-status.md
 ├── agents/
+│   ├── requirements-analyst.md
+│   ├── system-designer.md
+│   └── verification-auditor.md
 ├── skills/
+│   ├── sdd-core/
+│   │   └── SKILL.md
+│   ├── traceability-evidence/
+│   │   └── SKILL.md
+│   └── rules-governance/
+│       └── SKILL.md
 ├── hooks/
 │   ├── hooks.json
 │   ├── stop-summary.js
@@ -135,14 +144,16 @@ spec-flow-kit/
 4. 实现 `/sfk-development` 和 `/sfk-verify`，支持 traceability 和 evidence 更新。✅
 5. 添加可选提示型 hooks。✅
 6. 实现 `/sfk-rules-sync`，同步规则索引和规则文件列表。✅
-7. 后续增加 audit、strict gates、delivery readiness、deployment runbooks 和可选本地 MCP 状态服务。
+7. 添加 MVP agents：`requirements-analyst`、`system-designer`、`verification-auditor`。✅
+8. 添加 MVP skills：`sdd-core`、`traceability-evidence`、`rules-governance`。✅
+9. 后续增加 audit、strict gates、delivery readiness、deployment runbooks 和可选本地 MCP 状态服务。
 
 ## 说明
 
 - MVP 核心 commands 已实现为 prompt 文件：`/sfk-init`、`/sfk-requirements`、`/sfk-use`、`/sfk-design`、`/sfk-plan`、`/sfk-development`、`/sfk-verify`、`/sfk-rules-sync`、`/sfk-status`。
 - `/sfk-rules-sync` 是规则索引同步命令，负责检查和维护 `rules.yaml` 与 `project-profile.yaml` 中的 `rules.files`。
 - `/sfk-development` 和 `/sfk-verify` 是 prompt-only workflow；它们依赖项目本地文件协议、traceability schema、evidence schema 和真实命令/CI/用户确认 evidence。
-- agents 尚未实现。
-- skills 尚未实现。
+- MVP agents 已实现：`requirements-analyst`、`system-designer`、`verification-auditor`。
+- MVP skills 已实现：`sdd-core`、`traceability-evidence`、`rules-governance`。
 - hooks 已提供可选提示型 MVP：`stop-summary.js` 和 `post-edit-trace.js`。
 - MCP servers 尚未配置。
