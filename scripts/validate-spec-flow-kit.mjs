@@ -8,24 +8,21 @@ const root = resolve(__dirname, '..');
 const pluginRoot = join(root, 'plugins', 'spec-flow-kit');
 const errors = [];
 
-const TEMPLATE_EXPLANATION_EXPECTATIONS = {
-  'templates/gates.json': [
-    '文件用途：记录 spec-flow-kit 全局 gate 状态',
-    'mode 固定值：advisory、strict',
-    'advisory：只提示风险或缺口，不阻断命令',
-    'strict：允许 hook 或命令根据 gate 状态阻断高风险操作，必须由用户显式启用',
-    'status 固定值：pending、passed、failed、blocked、waived',
-    'evidence 用于记录证据引用，不应包含密钥、令牌或大段日志',
-  ],
-  'templates/state.json': [
-    '文件用途：记录 spec-flow-kit 全局状态、active feature、gate 模式和 feature 索引',
-    'activeFeature 为 null 时，命令需要显式 FEATURE-ID 或提示用户运行 /sfk-use',
-    'gateMode 固定值：advisory、strict',
-    'workspace.gitBranch 和 workspace.gitRef 只是元数据，不会自动切换分支',
-    'features 条目结构：path、stage、branch、lastUpdatedAt',
-    'stage 建议值：requirements、design、plan、development、verification、delivery、completed、blocked',
-  ],
-};
+const EXPECTED_COMMANDS = [
+  'sfk-init',
+  'sfk-requirements',
+  'sfk-use',
+  'sfk-design',
+  'sfk-plan',
+  'sfk-development',
+  'sfk-verify',
+  'sfk-rules-sync',
+  'sfk-audit',
+  'sfk-next',
+  'sfk-deliver',
+  'sfk-deploy',
+  'sfk-status',
+];
 
 const EXPECTED_AGENTS = [
   'requirements-analyst',
@@ -103,6 +100,22 @@ const TEMPLATE_EXPLANATION_EXPECTATIONS = {
     'rules[].enforcement.mode 固定值：advisory、strict',
     'rules[].status 固定值：proposed、active、deprecated',
     '自动发现的规则默认保持 status: proposed 和 enforcement.mode: advisory',
+  ],
+  'templates/gates.json': [
+    '文件用途：记录 spec-flow-kit 全局 gate 状态',
+    'mode 固定值：advisory、strict',
+    'advisory：只提示风险或缺口，不阻断命令',
+    'strict：允许 hook 或命令根据 gate 状态阻断高风险操作，必须由用户显式启用',
+    'status 固定值：pending、passed、failed、blocked、waived',
+    'evidence 用于记录证据引用，不应包含密钥、令牌或大段日志',
+  ],
+  'templates/state.json': [
+    '文件用途：记录 spec-flow-kit 全局状态、active feature、gate 模式和 feature 索引',
+    'activeFeature 为 null 时，命令需要显式 FEATURE-ID 或提示用户运行 /sfk-use',
+    'gateMode 固定值：advisory、strict',
+    'workspace.gitBranch 和 workspace.gitRef 只是元数据，不会自动切换分支',
+    'features 条目结构：path、stage、branch、lastUpdatedAt',
+    'stage 建议值：requirements、design、plan、development、verification、delivery、completed、blocked',
   ],
 };
 
