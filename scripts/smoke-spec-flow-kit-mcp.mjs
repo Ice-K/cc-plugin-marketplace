@@ -75,27 +75,16 @@ writeFileSync(path.join(featureDir, 'waivers.json'), JSON.stringify({ version: 1
 writeFileSync(path.join(featureDir, 'evidence.jsonl'), '');
 
 function encode(message) {
-  const body = JSON.stringify(message);
-  return `Content-Length: ${Buffer.byteLength(body, 'utf8')}\r\n\r\n${body}`;
+  return `${JSON.stringify(message)}\n`;
 }
 
 function decodeFrames(buffer) {
-  const frames = [];
-  let offset = 0;
-  while (offset < buffer.length) {
-    const headerEnd = buffer.indexOf('\r\n\r\n', offset);
-    if (headerEnd === -1) break;
-    const header = buffer.slice(offset, headerEnd).toString('utf8');
-    const lengthMatch = header.match(/Content-Length:\s*(\d+)/i);
-    if (!lengthMatch) throw new Error(`Missing Content-Length header: ${header}`);
-    const length = Number(lengthMatch[1]);
-    const bodyStart = headerEnd + 4;
-    const bodyEnd = bodyStart + length;
-    if (buffer.length < bodyEnd) break;
-    frames.push(JSON.parse(buffer.slice(bodyStart, bodyEnd).toString('utf8')));
-    offset = bodyEnd;
-  }
-  return frames;
+  return buffer
+    .toString('utf8')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => JSON.parse(line));
 }
 
 function send(child, message) {

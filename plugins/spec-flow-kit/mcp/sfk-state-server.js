@@ -182,8 +182,7 @@ function toolList() {
 }
 
 function writeMessage(message) {
-  const body = JSON.stringify(message);
-  process.stdout.write(`Content-Length: ${Buffer.byteLength(body, 'utf8')}\r\n\r\n${body}`);
+  process.stdout.write(`${JSON.stringify(message)}\n`);
 }
 
 function writeResponse(id, result) {
@@ -238,15 +237,18 @@ function handleRequest(request) {
 }
 
 function tryReadContentLength(buffer) {
-  const headerEnd = buffer.indexOf('\r\n\r\n');
+  const crlfHeaderEnd = buffer.indexOf('\r\n\r\n');
+  const lfHeaderEnd = buffer.indexOf('\n\n');
+  const usesCrlf = crlfHeaderEnd !== -1 && (lfHeaderEnd === -1 || crlfHeaderEnd < lfHeaderEnd);
+  const headerEnd = usesCrlf ? crlfHeaderEnd : lfHeaderEnd;
   if (headerEnd === -1) return null;
 
   const header = buffer.slice(0, headerEnd).toString('utf8');
-  const match = header.match(/(?:^|\r\n)Content-Length:\s*(\d+)/i);
+  const match = header.match(/(?:^|\r?\n)Content-Length:\s*(\d+)/i);
   if (!match) return null;
 
   const length = Number(match[1]);
-  const bodyStart = headerEnd + 4;
+  const bodyStart = headerEnd + (usesCrlf ? 4 : 2);
   const bodyEnd = bodyStart + length;
   if (buffer.length < bodyEnd) return null;
 

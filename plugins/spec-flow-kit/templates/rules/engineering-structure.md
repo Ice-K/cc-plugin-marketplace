@@ -5,17 +5,49 @@
 描述代码、测试、文档、脚本和生成产物应该放置的位置。
 
 ## 源码根目录
-
-- `src/` 或项目实际源码根目录：TODO
-
-## 测试根目录
-
-- `tests/` 或项目实际测试根目录：TODO
-
-## 模块边界
-
-- TODO：定义允许的依赖方向。
-- TODO：定义哪些目录或模块不应相互依赖。
+```bash
+project-name/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/example/demo/
+│   │   │       ├── aspect/
+│   │   │       ├── common/
+│   │   │       │   ├── constant/
+│   │   │       │   ├── enums/
+│   │   │       │   ├── exception/
+│   │   │       │   └── result/
+│   │   │       ├── config/
+│   │   │       ├── controller/
+│   │   │       ├── interceptor/
+│   │   │       ├── mapper/
+│   │   │       │   └── xml/
+│   │   │       ├── model/
+│   │   │       │   ├── dto/
+│   │   │       │   │   ├── request/
+│   │   │       │   │   └── response/
+│   │   │       │   ├── entity/
+│   │   │       │   └── vo/
+│   │   │       ├── service/
+│   │   │       │   └── impl/
+│   │   │       ├── task/
+│   │   │       └── util/
+│   │   │
+│   │   └── resources/
+│   │       ├── application.yml
+│   │       ├── application-dev.yml
+│   │       ├── application-test.yml
+│   │       ├── application-prod.yml
+│   │       ├── db/
+│   │       └── logback-spring.xml
+│   │
+│   └── test/
+│       └── java/
+│           └── com/example/demo/
+│
+├── pom.xml
+└── README.md
+```
 
 ## 生成产物
 
