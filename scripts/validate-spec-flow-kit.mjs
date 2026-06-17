@@ -78,60 +78,125 @@ const EXPECTED_TEMPLATES = [
 ];
 
 const TEMPLATE_EXPLANATION_EXPECTATIONS = {
-  'templates/flow.yaml': [
-    '文件用途：定义 spec-flow-kit 默认 SDD 阶段流转',
-    'stages[].id 固定阶段：init、requirements、use、design、plan、development、verification、status',
-    'gate: null 表示该阶段是查询或辅助阶段，不需要 gate',
-    'next: null 表示流程终点',
-    '修改阶段顺序、gate 名称或 command 时，需要同步 gates.json 和相关 /sfk-* 命令预期',
-  ],
-  'templates/project-profile.yaml': [
-    'project.type 建议值：unknown、web-api、frontend-app、fullstack-app、cli、library、service、monorepo、other',
-    'project.language 建议值：unknown、javascript、typescript、python、go、java、rust、csharp、other',
-    'project.packageManager 建议值：unknown、pnpm、npm、yarn、bun、pip、uv、poetry、go、maven、gradle、cargo、dotnet、other',
-    'requiresApproval: true 表示执行前必须获得用户显式确认',
-    'production.deploy: manual 表示只生成部署说明或 runbook，不自动部署',
-  ],
-  'templates/rules.yaml': [
-    'priority 固定优先级：feature > project > team > organization > plugin-default',
-    'rules[].level 固定值：required、recommended、informational',
-    'rules[].scope 固定值：feature、project、team、organization、plugin-default',
-    'rules[].appliesTo 建议值：requirements、design、plan、development、verification、audit、delivery、deploy',
-    'rules[].enforcement.mode 固定值：advisory、strict',
-    'rules[].status 固定值：proposed、active、deprecated',
-    '自动发现的规则默认保持 status: proposed 和 enforcement.mode: advisory',
-  ],
-  'templates/gates.json': [
-    '文件用途：记录 spec-flow-kit 全局 gate 状态',
-    'mode 固定值：advisory、strict',
-    'advisory：只提示风险或缺口，不阻断命令',
-    'strict：允许 hook 或命令根据 gate 状态阻断高风险操作，必须由用户显式启用',
-    'status 固定值：pending、passed、failed、blocked、waived',
-    'pending：尚未评估',
-    'passed：已通过',
-    'failed：评估失败',
-    'blocked：存在阻塞项，不能进入下一阶段',
-    'waived：通过显式豁免继续推进',
-    'evidence 用于记录证据引用，不应包含密钥、令牌或大段日志',
-  ],
-  'templates/state.json': [
-    '文件用途：记录 spec-flow-kit 全局状态、active feature、gate 模式和 feature 索引',
-    'activeFeature 为 null 时，命令需要显式 FEATURE-ID 或提示用户运行 /sfk-use',
-    'gateMode 固定值：advisory、strict',
-    'advisory：默认提示模式，只提示风险或缺口，不阻断命令',
-    'strict：严格 gate 模式，允许 hook 或命令阻断高风险操作，必须由用户显式启用',
-    'workspace.gitBranch 和 workspace.gitRef 只是元数据，不会自动切换分支',
-    'features 条目结构：path、stage、branch、lastUpdatedAt',
-    'stage 建议值：requirements、design、plan、development、verification、delivery、completed、blocked',
-    'requirements：需求阶段',
-    'design：设计阶段',
-    'plan：任务拆分阶段',
-    'development：实现阶段',
-    'verification：验收验证阶段',
-    'delivery：交付准备阶段',
-    'completed：feature 已完成',
-    'blocked：feature 当前被阻塞',
-  ],
+  'templates/flow.yaml': {
+    topComment: [
+      '文件用途：定义 spec-flow-kit 默认 SDD 阶段流转',
+      'stages[].id 固定阶段：init、requirements、use、design、plan、development、verification、status',
+      'gate: null 表示该阶段是查询或辅助阶段，不需要 gate',
+      'next: null 表示流程终点',
+      '修改阶段顺序、gate 名称或 command 时，需要同步 gates.json 和相关 /sfk-* 命令预期',
+    ],
+  },
+  'templates/project-profile.yaml': {
+    topComment: [
+      'project.type 建议值：unknown、web-api、frontend-app、fullstack-app、cli、library、service、monorepo、other',
+      'unknown：尚未确认项目类型。',
+      'web-api：后端 HTTP/API 服务。',
+      'frontend-app：前端应用。',
+      'fullstack-app：同时包含前端和后端的应用。',
+      'cli：命令行工具。',
+      'library：库或 SDK。',
+      'service：后台服务、worker 或 daemon。',
+      'monorepo：多包或多项目仓库。',
+      'other：不属于以上类型。',
+      'project.language 建议值：unknown、javascript、typescript、python、go、java、rust、csharp、other',
+      'unknown：尚未确认主要语言。',
+      'javascript：JavaScript 项目。',
+      'typescript：TypeScript 项目。',
+      'python：Python 项目。',
+      'go：Go 项目。',
+      'java：Java 项目。',
+      'rust：Rust 项目。',
+      'csharp：C# / .NET 项目。',
+      'other：主要语言不在上述列表中。',
+      'project.packageManager 建议值：unknown、pnpm、npm、yarn、bun、pip、uv、poetry、go、maven、gradle、cargo、dotnet、other',
+      'unknown：尚未确认包管理器。',
+      'pnpm：Node.js 项目使用 pnpm 管理依赖。',
+      'npm：Node.js 项目使用 npm 管理依赖。',
+      'yarn：Node.js 项目使用 yarn 管理依赖。',
+      'bun：JavaScript/TypeScript 项目使用 bun 管理依赖或执行脚本。',
+      'pip：Python 项目使用 pip 管理依赖。',
+      'uv：Python 项目使用 uv 管理依赖或虚拟环境。',
+      'poetry：Python 项目使用 Poetry 管理依赖和打包。',
+      'go：Go 工具链直接管理依赖与构建。',
+      'maven：Java 项目使用 Maven 管理依赖与构建。',
+      'gradle：Java/JVM 项目使用 Gradle 管理依赖与构建。',
+      'cargo：Rust 项目使用 Cargo 管理依赖与构建。',
+      'dotnet：.NET CLI 管理依赖、构建与测试。',
+      'other：其他包管理或构建工具。',
+      'requiresApproval: true 表示执行前必须获得用户显式确认',
+      'production.deploy: manual 表示只生成部署说明或 runbook，不自动部署',
+    ],
+  },
+  'templates/rules.yaml': {
+    topComment: [
+      'priority 固定优先级：feature > project > team > organization > plugin-default',
+      'rules[].level 固定值：required、recommended、informational',
+      'rules[].scope 固定值：feature、project、team、organization、plugin-default',
+      'feature：仅对当前 feature 生效的临时或局部规则。',
+      'project：当前仓库或项目范围内的规则。',
+      'team：团队共享的工程规则。',
+      'organization：组织级统一规则。',
+      'plugin-default：插件自带的默认规则。',
+      'rules[].appliesTo 建议值：requirements、design、plan、development、verification、audit、delivery、deploy',
+      'rules[].enforcement.mode 固定值：advisory、strict',
+      'rules[].status 固定值：proposed、active、deprecated',
+      '自动发现的规则默认保持 status: proposed 和 enforcement.mode: advisory',
+    ],
+  },
+  'templates/gates.json': {
+    fields: {
+      _comment: [
+        '文件用途：记录 spec-flow-kit 全局 gate 状态',
+        'mode 固定值：advisory、strict',
+        'advisory：只提示风险或缺口，不阻断命令',
+        'strict：允许 hook 或命令根据 gate 状态阻断高风险操作，必须由用户显式启用',
+        'status 固定值：pending、passed、failed、blocked、waived',
+        'pending：尚未评估。',
+        'passed：已通过。',
+        'failed：评估失败。',
+        'blocked：存在阻塞项，不能进入下一阶段。',
+        'waived：通过显式豁免继续推进。',
+        'evidence 用于记录证据引用，不应包含密钥、令牌或大段日志',
+      ],
+    },
+  },
+  'templates/state.json': {
+    fields: {
+      _comment: [
+        '文件用途：记录 spec-flow-kit 全局状态、active feature、gate 模式和 feature 索引',
+        'activeFeature 为 null 时，命令需要显式 FEATURE-ID 或提示用户运行 /sfk-use',
+        'gateMode 固定值：advisory、strict',
+        'advisory：默认提示模式，只报告风险或缺口。',
+        'strict：严格 gate 模式，必须由用户显式启用。',
+        'workspace.gitBranch 和 workspace.gitRef 只是元数据，不会自动切换分支',
+        'features 条目结构：path、stage、branch、lastUpdatedAt',
+        'state.json 通常由 /sfk-init、/sfk-requirements 和 /sfk-use 维护；只有状态异常时才建议人工修正。',
+        'stage 可使用完整词汇：draft、requirements、requirements_ready、design、design_ready、plan、development、development_in_progress、development_ready、verification、verification_passed、verification_blocked、verification_failed、delivery、completed、blocked。',
+        'draft：feature 已登记，但需求尚未整理完成。',
+        'requirements：正在编写或补充 requirements。',
+        'requirements_ready：requirements 已完成，可进入 design。',
+        'design：正在编写或补充 design。',
+        'design_ready：design 已完成，可进入 plan。',
+        'plan：正在编写或补充 tasks、test-plan 等计划内容。',
+        'development：泛指开发阶段；用于只需要粗粒度阶段标记的兼容场景。',
+        'development_in_progress：正在实现代码、测试或联调。',
+        'development_ready：开发产出已就绪，可进入 verification。',
+        'verification：正在执行验证、补证据或修复验证问题。',
+        'verification_passed：验证通过，可进入 delivery 或归档。',
+        'verification_blocked：验证被阻塞，需先清除阻塞项。',
+        'verification_failed：验证明确失败，需修复后重新验证。',
+        'delivery：正在整理交付、发布或变更说明。',
+        'completed：feature 生命周期已完成。',
+        'blocked：feature 在当前阶段整体受阻，无法继续推进。',
+      ],
+      featuresComment: [
+        'Feature 索引。创建 feature 后会按 FEATURE-ID 增加条目，例如 AUTH-LOCK-001。',
+        '每个条目应包含 path、stage、branch 和 lastUpdatedAt',
+        'stage 可使用完整词汇：draft、requirements、requirements_ready、design、design_ready、plan、development、development_in_progress、development_ready、verification、verification_passed、verification_blocked、verification_failed、delivery、completed、blocked。',
+      ],
+    },
+  },
 };
 
 function error(message) {
@@ -182,6 +247,23 @@ function assertMentioned(relativePath, expectedText) {
   }
 }
 
+function getTopCommentBlock(text, relativePath) {
+  const lines = text.split(/\r?\n/);
+  const block = [];
+  for (const line of lines) {
+    if (line.startsWith('#') || line.trim() === '') {
+      block.push(line);
+      continue;
+    }
+    break;
+  }
+
+  if (block.length === 0) {
+    error(`plugins/spec-flow-kit/${relativePath} is missing a top comment block`);
+  }
+  return block.join('\n');
+}
+
 function validateCommands() {
   for (const command of EXPECTED_COMMANDS) {
     const relativePath = `commands/${command}.md`;
@@ -225,20 +307,43 @@ function validateHooks() {
   }
 }
 
+function validateTemplateExplanations() {
+  for (const [templatePath, expectation] of Object.entries(TEMPLATE_EXPLANATION_EXPECTATIONS)) {
+    const text = readText(templatePath);
+    if (Array.isArray(expectation.topComment)) {
+      const topComment = getTopCommentBlock(text, templatePath);
+      for (const expectedText of expectation.topComment) {
+        if (!topComment.includes(expectedText)) {
+          error(`plugins/spec-flow-kit/${templatePath} top comment is missing template explanation: ${expectedText}`);
+        }
+      }
+    }
+
+    if (expectation.fields && typeof expectation.fields === 'object') {
+      const parsed = readJson(templatePath);
+      for (const [field, expectedTexts] of Object.entries(expectation.fields)) {
+        const fieldText = parsed?.[field];
+        if (typeof fieldText !== 'string') {
+          error(`plugins/spec-flow-kit/${templatePath} is missing string explanation field: ${field}`);
+          continue;
+        }
+        for (const expectedText of expectedTexts) {
+          if (!fieldText.includes(expectedText)) {
+            error(`plugins/spec-flow-kit/${templatePath} ${field} is missing template explanation: ${expectedText}`);
+          }
+        }
+      }
+    }
+  }
+}
+
 function validateSchemasAndTemplates() {
   for (const schema of EXPECTED_SCHEMAS) assertFile(`schemas/${schema}`);
   for (const template of EXPECTED_TEMPLATES) assertFile(`templates/${template}`);
 
   for (const schema of EXPECTED_SCHEMAS) readJson(`schemas/${schema}`);
   for (const template of ['state.json', 'gates.json', 'traceability.json', 'status.json', 'waivers.json']) readJson(`templates/${template}`);
-  for (const [templatePath, expectations] of Object.entries(TEMPLATE_EXPLANATION_EXPECTATIONS)) {
-    const text = readText(templatePath);
-    for (const expectedText of expectations) {
-      if (!text.includes(expectedText)) {
-        error(`plugins/spec-flow-kit/${templatePath} is missing template explanation: ${expectedText}`);
-      }
-    }
-  }
+  validateTemplateExplanations();
 }
 
 function validateMcp() {

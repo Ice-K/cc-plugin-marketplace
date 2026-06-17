@@ -18,16 +18,28 @@
 #   - other：不属于以上类型。
 # - project.language 建议值：unknown、javascript、typescript、python、go、java、rust、csharp、other。
 #   - unknown：尚未确认主要语言。
-#   - javascript/typescript/python/go/java/rust/csharp：对应主要语言。
+#   - javascript：JavaScript 项目。
+#   - typescript：TypeScript 项目。
+#   - python：Python 项目。常见于脚本、服务或自动化工具。
+#   - go：Go 项目。通常以 go.mod 和 go test 为主。
+#   - java：Java 项目。常见于 Maven 或 Gradle 构建。
+#   - rust：Rust 项目。通常使用 cargo 构建和测试。
+#   - csharp：C# / .NET 项目。通常使用 dotnet CLI。
 #   - other：主要语言不在上述列表中。
 # - project.packageManager 建议值：unknown、pnpm、npm、yarn、bun、pip、uv、poetry、go、maven、gradle、cargo、dotnet、other。
 #   - unknown：尚未确认包管理器。
-#   - pnpm/npm/yarn/bun：JavaScript/TypeScript 包管理器。
-#   - pip/uv/poetry：Python 包管理器。
-#   - go：Go module 工具链。
-#   - maven/gradle：Java/JVM 构建工具。
-#   - cargo：Rust 包管理器。
-#   - dotnet：.NET CLI。
+#   - pnpm：Node.js 项目使用 pnpm 管理依赖。
+#   - npm：Node.js 项目使用 npm 管理依赖。
+#   - yarn：Node.js 项目使用 yarn 管理依赖。
+#   - bun：JavaScript/TypeScript 项目使用 bun 管理依赖或执行脚本。
+#   - pip：Python 项目使用 pip 管理依赖。
+#   - uv：Python 项目使用 uv 管理依赖或虚拟环境。
+#   - poetry：Python 项目使用 Poetry 管理依赖和打包。
+#   - go：Go 工具链直接管理依赖与构建。
+#   - maven：Java 项目使用 Maven 管理依赖与构建。
+#   - gradle：Java/JVM 项目使用 Gradle 管理依赖与构建。
+#   - cargo：Rust 项目使用 Cargo 管理依赖与构建。
+#   - dotnet：.NET CLI 管理依赖、构建与测试。
 #   - other：其他包管理或构建工具。
 # - commands.*：本地质量检查命令；null 表示未配置。/sfk-verify 可用这些命令生成 evidence。
 # - rules.files：规则正文文件入口；应与 rules.yaml 中的 source 字段保持同步。

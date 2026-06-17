@@ -17,6 +17,11 @@
 #   - recommended：推荐遵守的规则；通常作为改进建议。
 #   - informational：背景信息或提示，不作为阻断依据。
 # - rules[].scope 固定值：feature、project、team、organization、plugin-default。
+#   - feature：仅对当前 feature 生效的临时或局部规则。
+#   - project：当前仓库或项目范围内的规则。
+#   - team：团队共享的工程规则。
+#   - organization：组织级统一规则。
+#   - plugin-default：插件自带的默认规则。
 # - rules[].appliesTo 建议值：requirements、design、plan、development、verification、audit、delivery、deploy。
 #   - requirements：需求阶段。
 #   - design：设计阶段。
