@@ -77,6 +77,32 @@ const EXPECTED_TEMPLATES = [
   'runs.jsonl',
 ];
 
+const TEMPLATE_EXPLANATION_EXPECTATIONS = {
+  'templates/flow.yaml': [
+    '文件用途：定义 spec-flow-kit 默认 SDD 阶段流转',
+    'stages[].id 固定阶段：init、requirements、use、design、plan、development、verification、status',
+    'gate: null 表示该阶段是查询或辅助阶段，不需要 gate',
+    'next: null 表示流程终点',
+    '修改阶段顺序、gate 名称或 command 时，需要同步 gates.json 和相关 /sfk-* 命令预期',
+  ],
+  'templates/project-profile.yaml': [
+    'project.type 建议值：unknown、web-api、frontend-app、fullstack-app、cli、library、service、monorepo、other',
+    'project.language 建议值：unknown、javascript、typescript、python、go、java、rust、csharp、other',
+    'project.packageManager 建议值：unknown、pnpm、npm、yarn、bun、pip、uv、poetry、go、maven、gradle、cargo、dotnet、other',
+    'requiresApproval: true 表示执行前必须获得用户显式确认',
+    'production.deploy: manual 表示只生成部署说明或 runbook，不自动部署',
+  ],
+  'templates/rules.yaml': [
+    'priority 固定优先级：feature > project > team > organization > plugin-default',
+    'rules[].level 固定值：required、recommended、informational',
+    'rules[].scope 固定值：feature、project、team、organization、plugin-default',
+    'rules[].appliesTo 建议值：requirements、design、plan、development、verification、audit、delivery、deploy',
+    'rules[].enforcement.mode 固定值：advisory、strict',
+    'rules[].status 固定值：proposed、active、deprecated',
+    '自动发现的规则默认保持 status: proposed 和 enforcement.mode: advisory',
+  ],
+};
+
 function error(message) {
   errors.push(message);
 }
@@ -122,6 +148,17 @@ function assertMentioned(relativePath, expectedText) {
   const text = readText(relativePath);
   if (!text.includes(expectedText)) {
     error(`plugins/spec-flow-kit/${relativePath} does not mention ${expectedText}`);
+  }
+}
+
+function validateTemplateExplanations() {
+  for (const [relativePath, expectedSnippets] of Object.entries(TEMPLATE_EXPLANATION_EXPECTATIONS)) {
+    const text = readText(relativePath);
+    for (const snippet of expectedSnippets) {
+      if (!text.includes(snippet)) {
+        error(`plugins/spec-flow-kit/${relativePath} is missing template explanation: ${snippet}`);
+      }
+    }
   }
 }
 
@@ -210,6 +247,7 @@ validateAgents();
 validateSkills();
 validateHooks();
 validateSchemasAndTemplates();
+validateTemplateExplanations();
 validateMcp();
 validateNoStaleGitkeep();
 

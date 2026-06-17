@@ -1,6 +1,38 @@
 # 项目画像配置。
-# /sfk-init 会尽量自动探测这些值；用户可以在初始化后手动修正。
-# 这些命令会被 /sfk-verify 用来运行本地质量检查并生成 evidence。
+#
+# 文件用途：记录项目类型、主要语言、包管理器、质量检查命令、规则文件入口和环境信息。
+# 读取者：/sfk-design、/sfk-plan、/sfk-development、/sfk-verify、/sfk-deploy、/sfk-audit 会按需读取。
+# 维护方式：/sfk-init 会尽量自动探测并只填补空值；用户应在初始化后确认和修正 unknown 或 null 字段。
+# 安全约束：/sfk-init 不会自动运行 install、lint、typecheck、test、build 或 deploy 命令。
+#
+# 固定或建议取值：
+# - project.type 建议值：unknown、web-api、frontend-app、fullstack-app、cli、library、service、monorepo、other。
+#   - unknown：尚未确认项目类型。
+#   - web-api：后端 HTTP/API 服务。
+#   - frontend-app：前端应用。
+#   - fullstack-app：同时包含前端和后端的应用。
+#   - cli：命令行工具。
+#   - library：库或 SDK。
+#   - service：后台服务、worker 或 daemon。
+#   - monorepo：多包或多项目仓库。
+#   - other：不属于以上类型。
+# - project.language 建议值：unknown、javascript、typescript、python、go、java、rust、csharp、other。
+#   - unknown：尚未确认主要语言。
+#   - javascript/typescript/python/go/java/rust/csharp：对应主要语言。
+#   - other：主要语言不在上述列表中。
+# - project.packageManager 建议值：unknown、pnpm、npm、yarn、bun、pip、uv、poetry、go、maven、gradle、cargo、dotnet、other。
+#   - unknown：尚未确认包管理器。
+#   - pnpm/npm/yarn/bun：JavaScript/TypeScript 包管理器。
+#   - pip/uv/poetry：Python 包管理器。
+#   - go：Go module 工具链。
+#   - maven/gradle：Java/JVM 构建工具。
+#   - cargo：Rust 包管理器。
+#   - dotnet：.NET CLI。
+#   - other：其他包管理或构建工具。
+# - commands.*：本地质量检查命令；null 表示未配置。/sfk-verify 可用这些命令生成 evidence。
+# - rules.files：规则正文文件入口；应与 rules.yaml 中的 source 字段保持同步。
+# - requiresApproval: true 表示执行前必须获得用户显式确认；false 表示不额外要求环境级确认，但命令自身仍可要求确认。
+# - production.deploy: manual 表示只生成部署说明或 runbook，不自动部署。
 
 version: 1 # 文件协议版本，当前保持为 1。
 

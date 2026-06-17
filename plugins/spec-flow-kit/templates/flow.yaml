@@ -1,6 +1,28 @@
 # spec-flow-kit 默认 SDD 流程定义。
-# 这个文件描述每个阶段的顺序、对应 slash command、阶段 gate 和下一阶段。
-# 用户通常不需要修改；只有当团队希望调整流程顺序或增删阶段时才需要编辑。
+#
+# 文件用途：定义 spec-flow-kit 默认 SDD 阶段流转、每个阶段对应的 slash command、阶段 gate 和推荐下一步。
+# 读取者：/sfk-status、/sfk-next、/sfk-init 和需要展示流程的命令会读取此文件。
+# 维护方式：用户通常不需要修改；只有团队明确要调整阶段顺序、增删阶段或替换命令时才编辑。
+#
+# 字段说明：
+# - name：流程名称，可按团队习惯修改。
+# - version：文件协议版本；当前保持为 1。
+# - stages[]：阶段列表，按执行顺序排列。
+# - stages[].id 固定阶段：init、requirements、use、design、plan、development、verification、status。
+#   - init：初始化 .spec-flow-kit 工作区。
+#   - requirements：创建或更新 feature requirements。
+#   - use：选择 active feature。
+#   - design：创建系统设计、ADR 和测试计划。
+#   - plan：拆分任务并初始化 traceability。
+#   - development：实现任务并更新 traceability。
+#   - verification：验证验收标准并记录 evidence。
+#   - status：查询状态、缺口和下一步。
+# - stages[].name：阶段显示名称。
+# - stages[].command：阶段对应 slash command，例如 /sfk-design。
+# - stages[].gate：进入下一阶段前应满足的 gate；gate: null 表示该阶段是查询或辅助阶段，不需要 gate。
+# - stages[].next：推荐下一阶段；next: null 表示流程终点。
+#
+# 修改注意：修改阶段顺序、gate 名称或 command 时，需要同步 gates.json 和相关 /sfk-* 命令预期。
 
 name: default-sdd-flow # 流程名称，可按团队习惯修改。
 version: 1 # 文件协议版本，当前保持为 1。
