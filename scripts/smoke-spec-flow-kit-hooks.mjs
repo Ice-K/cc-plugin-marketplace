@@ -117,6 +117,45 @@ const stop = runHook('stop-summary.js', { cwd: fixtureRoot });
 assert(stop.status === 0, 'stop-summary should exit 0');
 assert(parseHookJson(stop.stdout)?.hookSpecificOutput?.additionalContext?.includes('AUTH-LOCK-001'), 'stop-summary should mention active feature');
 
+// Regression: a Stop hook must not block the turn from ending on recursive
+// triggers. When Claude Code re-invokes the hook it sets stop_hook_active=true;
+// the hook must return success with NO additionalContext so the turn can end.
+const stopReentrant = runHook('stop-summary.js', { cwd: fixtureRoot, stop_hook_active: true });
+assert(stopReentrant.status === 0, 'stop-summary should exit 0 when stop_hook_active is true');
+assert(parseHookJson(stopReentrant.stdout) == null, 'stop-summary must emit no JSON when stop_hook_active is true');
+
+// Regression for the reported loop: with no active feature, the first Stop
+// invocation emits the advisory once, but a reentrant invocation must stay silent.
+writeJson(path.join(specRoot, 'state.json'), {
+  version: 1,
+  activeFeature: null,
+  gateMode: 'advisory',
+  workspace: { root: '.', gitBranch: 'main', gitRef: 'abc123' },
+  features: {},
+  updatedAt: null,
+});
+const stopNoFeatureFirst = runHook('stop-summary.js', { cwd: fixtureRoot });
+assert(parseHookJson(stopNoFeatureFirst.stdout)?.hookSpecificOutput?.additionalContext?.includes('No active feature'), 'stop-summary should mention no active feature on first invocation');
+const stopNoFeatureReentrant = runHook('stop-summary.js', { cwd: fixtureRoot, stop_hook_active: true });
+assert(parseHookJson(stopNoFeatureReentrant.stdout) == null, 'stop-summary must emit no JSON when stop_hook_active is true even with no active feature');
+
+// Restore the active-feature fixture so the PostToolUse assertions below still hold.
+writeJson(path.join(specRoot, 'state.json'), {
+  version: 1,
+  activeFeature: 'AUTH-LOCK-001',
+  gateMode: 'advisory',
+  workspace: { root: '.', gitBranch: 'main', gitRef: 'abc123' },
+  features: {
+    'AUTH-LOCK-001': {
+      path: '.spec-flow-kit/features/AUTH-LOCK-001',
+      stage: 'development_ready',
+      branch: 'main',
+      lastUpdatedAt: null,
+    },
+  },
+  updatedAt: null,
+});
+
 const postEdit = runHook('post-edit-trace.js', {
   cwd: fixtureRoot,
   tool_name: 'Edit',

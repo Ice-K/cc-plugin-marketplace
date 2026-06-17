@@ -131,6 +131,13 @@ async function main() {
     const input = parseJson(await readStdin());
     if (!input) return;
 
+    // Claude Code re-invokes a Stop hook (setting stop_hook_active=true) when a
+    // prior hook output caused the turn to continue. On these recursive triggers
+    // the hook MUST return success with no additionalContext — otherwise the same
+    // non-empty advisory is fed back every iteration and the turn can never end
+    // (loops until the harness's CLAUDE_CODE_STOP_HOOK_BLOCK_CAP aborts it).
+    if (input.stop_hook_active) return;
+
     const projectRoot = typeof input.cwd === 'string' ? input.cwd : process.cwd();
     const specRoot = path.join(projectRoot, '.spec-flow-kit');
     const statePath = path.join(specRoot, 'state.json');
