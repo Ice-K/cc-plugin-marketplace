@@ -8,21 +8,24 @@ const root = resolve(__dirname, '..');
 const pluginRoot = join(root, 'plugins', 'spec-flow-kit');
 const errors = [];
 
-const EXPECTED_COMMANDS = [
-  'sfk-init',
-  'sfk-requirements',
-  'sfk-use',
-  'sfk-design',
-  'sfk-plan',
-  'sfk-development',
-  'sfk-verify',
-  'sfk-rules-sync',
-  'sfk-audit',
-  'sfk-next',
-  'sfk-deliver',
-  'sfk-deploy',
-  'sfk-status',
-];
+const TEMPLATE_EXPLANATION_EXPECTATIONS = {
+  'templates/gates.json': [
+    '文件用途：记录 spec-flow-kit 全局 gate 状态',
+    'mode 固定值：advisory、strict',
+    'advisory：只提示风险或缺口，不阻断命令',
+    'strict：允许 hook 或命令根据 gate 状态阻断高风险操作，必须由用户显式启用',
+    'status 固定值：pending、passed、failed、blocked、waived',
+    'evidence 用于记录证据引用，不应包含密钥、令牌或大段日志',
+  ],
+  'templates/state.json': [
+    '文件用途：记录 spec-flow-kit 全局状态、active feature、gate 模式和 feature 索引',
+    'activeFeature 为 null 时，命令需要显式 FEATURE-ID 或提示用户运行 /sfk-use',
+    'gateMode 固定值：advisory、strict',
+    'workspace.gitBranch 和 workspace.gitRef 只是元数据，不会自动切换分支',
+    'features 条目结构：path、stage、branch、lastUpdatedAt',
+    'stage 建议值：requirements、design、plan、development、verification、delivery、completed、blocked',
+  ],
+};
 
 const EXPECTED_AGENTS = [
   'requirements-analyst',
@@ -211,6 +214,14 @@ function validateSchemasAndTemplates() {
 
   for (const schema of EXPECTED_SCHEMAS) readJson(`schemas/${schema}`);
   for (const template of ['state.json', 'gates.json', 'traceability.json', 'status.json', 'waivers.json']) readJson(`templates/${template}`);
+  for (const [templatePath, expectations] of Object.entries(TEMPLATE_EXPLANATION_EXPECTATIONS)) {
+    const text = readText(templatePath);
+    for (const expectedText of expectations) {
+      if (!text.includes(expectedText)) {
+        error(`plugins/spec-flow-kit/${templatePath} is missing template explanation: ${expectedText}`);
+      }
+    }
+  }
 }
 
 function validateMcp() {

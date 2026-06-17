@@ -1,5 +1,5 @@
 {
-  "_comment": "Gate 状态文件。记录每个阶段是否通过、阻塞、失败或被豁免。MVP 默认 advisory，只提示不阻断。",
+  "_comment": "文件用途：记录 spec-flow-kit 全局 gate 状态。mode 固定值：advisory、strict。advisory：只提示风险或缺口，不阻断命令。strict：允许 hook 或命令根据 gate 状态阻断高风险操作，必须由用户显式启用。每个 gate 的 status 固定值：pending、passed、failed、blocked、waived。pending：尚未评估。passed：已通过。failed：评估失败。blocked：存在阻塞项，不能进入下一阶段。waived：通过显式豁免继续推进。evidence 用于记录证据引用，不应包含密钥、令牌或大段日志。updatedAt 通常由工具维护。",
   "version": 1,
   "mode": "advisory",
   "gates": {
