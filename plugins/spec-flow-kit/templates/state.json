@@ -1,5 +1,5 @@
 {
-  "_comment": "文件用途：记录 spec-flow-kit 全局状态、active feature、gate 模式和 feature 索引。activeFeature 是当前默认 feature；activeFeature 为 null 时，命令需要显式 FEATURE-ID 或提示用户运行 /sfk-use。gateMode 固定值：advisory、strict。advisory：默认提示模式。strict：严格 gate 模式，必须由用户显式启用。workspace.gitBranch 和 workspace.gitRef 只是元数据，不会自动切换分支。features 条目结构：path、stage、branch、lastUpdatedAt。stage 建议值：requirements、design、plan、development、verification、delivery、completed、blocked。updatedAt 通常由工具维护。",
+  "_comment": "文件用途：记录 spec-flow-kit 全局状态、active feature、gate 模式和 feature 索引。activeFeature 是当前默认 feature；activeFeature 为 null 时，命令需要显式 FEATURE-ID 或提示用户运行 /sfk-use。gateMode 固定值：advisory、strict。advisory：默认提示模式，只提示风险或缺口，不阻断命令。strict：严格 gate 模式，允许 hook 或命令阻断高风险操作，必须由用户显式启用。workspace.gitBranch 和 workspace.gitRef 只是元数据，不会自动切换分支。features 条目结构：path、stage、branch、lastUpdatedAt。stage 建议值：requirements、design、plan、development、verification、delivery、completed、blocked。requirements：需求阶段。design：设计阶段。plan：任务拆分阶段。development：实现阶段。verification：验收验证阶段。delivery：交付准备阶段。completed：feature 已完成。blocked：feature 当前被阻塞。updatedAt 通常由工具维护。",
   "version": 1,
   "activeFeature": null,
   "gateMode": "advisory",
@@ -9,7 +9,7 @@
     "gitBranch": null,
     "gitRef": null
   },
-  "featuresComment": "Feature 索引。创建 feature 后会按 FEATURE-ID 增加条目，例如 AUTH-LOCK-001。每个条目应包含 path、stage、branch 和 lastUpdatedAt；stage 建议值为 requirements、design、plan、development、verification、delivery、completed、blocked。",
+  "featuresComment": "Feature 索引。创建 feature 后会按 FEATURE-ID 增加条目，例如 AUTH-LOCK-001。每个条目应包含 path、stage、branch 和 lastUpdatedAt；stage 建议值为 requirements、design、plan、development、verification、delivery、completed、blocked。requirements：需求阶段。design：设计阶段。plan：任务拆分阶段。development：实现阶段。verification：验收验证阶段。delivery：交付准备阶段。completed：feature 已完成。blocked：feature 当前被阻塞。",
   "features": {},
   "updatedAt": null
 }
