@@ -1,7 +1,43 @@
 # 用户规则索引。
-# rules.yaml 用于把 rules/*.md 中的自然语言规则结构化，方便 Gate、Audit 和命令按范围加载。
-# /sfk-rules-sync 可同步维护此索引和 project-profile.yaml 中的 rules.files。
-# 注意：自动发现的规则建议先保持 proposed，用户确认后再改为 active。
+#
+# 文件用途：把 rules/*.md 中的自然语言规则结构化，方便 Gate、Audit 和 /sfk-* 命令按范围加载。
+# 关系说明：rules/*.md 是规则正文；rules.yaml 是结构化索引和执行元数据，不替代规则正文。
+# 维护方式：/sfk-rules-sync 可同步 rules/*.md、rules.yaml 和 project-profile.yaml 的 rules.files。
+# 治理原则：自动发现的规则默认保持 status: proposed 和 enforcement.mode: advisory；strict 必须由用户明确启用。
+#
+# 固定取值：
+# - priority 固定优先级：feature > project > team > organization > plugin-default。
+#   - feature：当前 feature 的临时规则，优先级最高。
+#   - project：当前项目规则。
+#   - team：团队级规则。
+#   - organization：组织级规则。
+#   - plugin-default：插件默认规则，优先级最低。
+# - rules[].level 固定值：required、recommended、informational。
+#   - required：必须满足的规则；在 strict 模式下可能阻断。
+#   - recommended：推荐遵守的规则；通常作为改进建议。
+#   - informational：背景信息或提示，不作为阻断依据。
+# - rules[].scope 固定值：feature、project、team、organization、plugin-default。
+#   - feature：仅对当前 feature 生效的临时或局部规则。
+#   - project：当前仓库或项目范围内的规则。
+#   - team：团队共享的工程规则。
+#   - organization：组织级统一规则。
+#   - plugin-default：插件自带的默认规则。
+# - rules[].appliesTo 建议值：requirements、design、plan、development、verification、audit、delivery、deploy。
+#   - requirements：需求阶段。
+#   - design：设计阶段。
+#   - plan：任务拆分阶段。
+#   - development：实现阶段。
+#   - verification：验收验证阶段。
+#   - audit：审计阶段。
+#   - delivery：交付准备阶段。
+#   - deploy：部署阶段。
+# - rules[].enforcement.mode 固定值：advisory、strict。
+#   - advisory：只提示风险或建议，不阻断。
+#   - strict：允许命令或 hook 阻断；只能由用户显式启用。
+# - rules[].status 固定值：proposed、active、deprecated。
+#   - proposed：自动发现或尚未确认的规则。
+#   - active：用户已确认启用的规则。
+#   - deprecated：已过时，保留记录但不再默认应用。
 
 version: 1 # 文件协议版本，当前保持为 1。
 
