@@ -34,7 +34,7 @@
 #   - active：用户已确认启用的规则。
 #   - deprecated：已过时，保留记录但不再默认应用。
 
-version: 1 # 文件协议版本，当前保持为 1.
+version: 1 # 文件协议版本，当前保持为 1。
 
 # 规则冲突时的优先级，从高到低。
 priority:
@@ -49,18 +49,15 @@ rules:
     title: 需要识别源码和测试根目录
     level: recommended # required / recommended / informational。
     source: .spec-flow-kit/rules/engineering-structure.md # 规则来源文件。
-    sourceLines: null # 可选：来源行号，例如 "12-20"；未知时可为 null。
+    sourceLines: null # 可选：来源行号，例如 "12-20"；未知时为 null。
     scope: project # feature / project / team / organization / plugin-default。
-    # 应用与
     appliesTo:
       - design
       - development
       - verification
-    # advisory 表示只提示；strict 表示后续可阻断。
     enforcement:
-      mode: advisory
-    # proposed 拟定 / active 激活 / deprecated 过时。
-    status: proposed
+      mode: advisory # advisory 表示只提示；strict 表示后续可阻断。
+    status: proposed # proposed / active / deprecated。
 
   - id: RULE-PROCESS-001
     title: Feature 工作应保持 traceability 更新
