@@ -76,7 +76,7 @@ Task 解析规则：
 - `.spec-flow-kit/features/<FEATURE-ID>/traceability.md`
 - `.spec-flow-kit/features/<FEATURE-ID>/traceability.json`
 - `.spec-flow-kit/features/<FEATURE-ID>/status.json`
-- `project-profile.yaml` 中与 development、testing 相关的 `rules.files`
+- 按 `rules.yaml` 过滤出的适用于 `development` 阶段的唯一 `source` 文件（规范化路径并去重，每个文件最多读取一次）
 
 按需读取：
 
@@ -84,6 +84,20 @@ Task 解析规则：
 - `.spec-flow-kit/features/<FEATURE-ID>/runs.jsonl`
 - 相关源码文件和测试文件
 - 项目配置文件，例如 package scripts、测试配置、lint/typecheck 配置
+
+## 运行时规则加载协议
+
+当前阶段：`development`。
+
+1. 读取 `.spec-flow-kit/rules.yaml`。
+2. 选择 `status: active` 且 `appliesTo` 包含 `development` 的规则。
+3. 按 priority、level、enforcement.mode 分组，列出 required / recommended / informational。
+4. 从选中规则提取 `source`，规范化为项目相对路径并去重。
+5. 每个唯一 `source` 文件最多读取一次；同一个 source 被多条规则引用时不得重复读取。
+6. `required + strict` 规则必须读取正文全文，并作为代码实现约束。
+7. recommended 规则作为实现建议；informational 规则作为上下文。
+8. 如果 source 缺失，记录为规则加载缺口；strict required 规则缺失时不得继续修改业务代码，除非用户明确确认继续。
+9. 实施前必须输出或内部整理本轮“适用规则清单”，包含 rule ID、level、enforcement.mode、source。
 
 ## 执行步骤
 
@@ -93,7 +107,7 @@ Task 解析规则：
    - `design-ready`
    - `plan-ready`
 3. 读取目标 feature 的 requirements、design、ADR、tasks、test-plan 和 traceability。
-4. 读取适用 rules，并列出会影响实现的 required / recommended rules。
+4. 按运行时规则加载协议读取适用 rules，列出会影响实现的 required / recommended / informational rules，并记录去重后的 source 文件列表。
 5. 对每个选定 task：
    - 确认关联 requirement ID。
    - 确认关联 design ID 或 ADR。
@@ -178,6 +192,17 @@ Evidence 类型规则：
 Feature: <FEATURE-ID>
 Gate: development-ready = passed / blocked / failed
 Stage: development_in_progress / development_ready
+
+规则加载：
+- 阶段：development
+- active applicable rules: N
+- required/strict: N
+- recommended: N
+- informational: N
+- 已读取规则文件：
+  - .spec-flow-kit/rules/development-process.md
+- 已跳过重复 source：N
+- 缺失 source：N
 
 处理任务：
 - TASK-001: passed / partial / blocked / failed

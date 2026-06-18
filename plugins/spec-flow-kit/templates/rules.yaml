@@ -3,7 +3,7 @@
 # 文件用途：把 rules/*.md 中的自然语言规则结构化，方便 Gate、Audit 和 /sfk-* 命令按范围加载。
 # 关系说明：rules/*.md 是规则正文；rules.yaml 是结构化索引和执行元数据，不替代规则正文。
 # 维护方式：/sfk-rules-sync 可同步 rules/*.md、rules.yaml 和 project-profile.yaml 的 rules.files。
-# 治理原则：自动发现的规则默认保持 status: proposed 和 enforcement.mode: advisory；strict 必须由用户明确启用。
+# 治理原则：插件内置模板规则默认 level: required、status: active、enforcement.mode: strict；自动发现的新规则候选默认保持 status: proposed 和 enforcement.mode: advisory，必须由用户确认后才能升级为 active / strict。
 #
 # 固定取值：
 # - priority 固定优先级：feature > project > team > organization > plugin-default。
@@ -13,9 +13,9 @@
 #   - organization：组织级规则。
 #   - plugin-default：插件默认规则，优先级最低。
 # - rules[].level 固定值：required、recommended、informational。
-#   - required：必须满足的规则；在 strict 模式下可能阻断。
-#   - recommended：推荐遵守的规则；通常作为改进建议。
-#   - informational：背景信息或提示，不作为阻断依据。
+#   - required（强制）：必须满足的规则；在 strict 模式下可作为阻断依据。
+#   - recommended（推荐）：推荐遵守的规则；通常形成改进建议。
+#   - informational（参考）：背景信息或提示，不应作为阻断依据。
 # - rules[].scope 固定值：feature、project、team、organization、plugin-default。
 #   - feature：仅对当前 feature 生效的临时或局部规则。
 #   - project：当前仓库或项目范围内的规则。
@@ -52,7 +52,7 @@ priority:
 rules:
   - id: RULE-STRUCTURE-001 # 规则 ID，建议使用 RULE-<类别>-<序号>。
     title: 需要识别源码和测试根目录
-    level: recommended # required / recommended / informational。
+    level: required # required（强制）/ recommended（推荐）/ informational（参考）。
     source: .spec-flow-kit/rules/engineering-structure.md # 规则来源文件。
     sourceLines: null # 可选：来源行号，例如 "12-20"；未知时为 null。
     scope: project # feature / project / team / organization / plugin-default。
@@ -61,12 +61,12 @@ rules:
       - development
       - verification
     enforcement:
-      mode: advisory # advisory 表示只提示；strict 表示后续可阻断。
-    status: proposed # proposed / active / deprecated。
+      mode: strict # strict 表示可作为阻断依据；advisory 表示只提示。
+    status: active # active / proposed / deprecated。
 
   - id: RULE-PROCESS-001
     title: Feature 工作应保持 traceability 更新
-    level: required
+    level: required # required（强制）/ recommended（推荐）/ informational（参考）。
     source: .spec-flow-kit/rules/development-process.md
     sourceLines: null
     scope: project
@@ -75,5 +75,5 @@ rules:
       - development
       - verification
     enforcement:
-      mode: advisory
-    status: active
+      mode: strict # strict 表示可作为阻断依据；advisory 表示只提示。
+    status: active # active / proposed / deprecated。

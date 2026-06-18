@@ -27,4 +27,12 @@
 
 ## 执行方式
 
-默认模式：advisory。
+默认等级：强制（required）  
+默认状态：active  
+默认执行模式：strict
+
+等级说明：
+
+- 强制（required）：必须满足，在 strict 模式下可作为阻断依据。
+- 推荐（recommended）：建议遵守，通常形成改进建议。
+- 参考（informational）：提供上下文，不应作为阻断依据。

@@ -63,6 +63,18 @@ Feature 解析顺序：
 - `.spec-flow-kit/features/<FEATURE-ID>/evidence.jsonl`
 - `.spec-flow-kit/features/<FEATURE-ID>/status.json`
 - `.spec-flow-kit/features/<FEATURE-ID>/waivers.json`（如果存在）
+- 按 `rules.yaml` 过滤出的适用于 `deploy` 阶段的唯一 `source` 文件（规范化路径并去重，每个文件最多读取一次）
+
+## 运行时规则加载协议
+
+当前阶段：`deploy`。
+
+1. 读取 `.spec-flow-kit/rules.yaml`。
+2. 选择 `status: active` 且 `appliesTo` 包含 `deploy` 的规则。
+3. 从选中规则提取 `source`，规范化为项目相对路径并去重。
+4. 每个唯一 `source` 文件最多读取一次。
+5. `required + strict` 规则必须纳入 deploy-plan.md 的 Go / No-Go 检查清单。
+6. 缺失 source 或 strict gate 问题必须写入 Warnings。
 
 ## 写入文件
 

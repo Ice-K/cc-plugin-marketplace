@@ -9,7 +9,7 @@ argument-hint: [项目说明]
 
 ## 目标
 
-在当前项目中初始化 `.spec-flow-kit/` 工作区，生成本地 SDD 文件协议所需的基础文件和规则模板。
+在当前项目中初始化 `.spec-flow-kit/` 工作区。新建文件时必须以插件 `templates/` 中对应文件为基准创建完整内容；已有文件时必须保留用户内容，并只按模板补齐缺失结构。
 
 ## 输入
 
@@ -25,7 +25,29 @@ argument-hint: [项目说明]
 - 不运行安装、测试、构建或部署命令。
 - 不无提示覆盖用户已有 `.spec-flow-kit/` 文件。
 - 如果发现已有 `.spec-flow-kit/`，先报告现状，并询问用户要合并、补齐、跳过还是覆盖。
-- 自动发现的规则只能先作为 `proposed` 或 advisory，不得自动变成 strict。
+- 自动发现的规则只能先作为 `level: recommended`、`status: proposed`、`enforcement.mode: advisory` 的候选项，不得自动升级为 active / strict。
+
+## 模板来源
+
+创建或补齐基础文件时，以插件内置模板作为结构基准：
+
+```text
+plugins/spec-flow-kit/templates/flow.yaml
+plugins/spec-flow-kit/templates/state.json
+plugins/spec-flow-kit/templates/gates.json
+plugins/spec-flow-kit/templates/project-profile.yaml
+plugins/spec-flow-kit/templates/rules.yaml
+plugins/spec-flow-kit/templates/rules/engineering-structure.md
+plugins/spec-flow-kit/templates/rules/development-process.md
+plugins/spec-flow-kit/templates/rules/coding-style.md
+plugins/spec-flow-kit/templates/rules/testing-rules.md
+```
+
+- 文件不存在：按对应模板创建完整内容。
+- 文件已存在：不得盲目覆盖；按模板检查并补齐缺失字段、缺失列表项或缺失说明。
+- `project-profile.yaml` 中自动探测结果只填充空值、`null`、`unknown`，不得覆盖用户已有配置。
+- `rules.yaml` 中插件内置模板规则默认 `level: required`、`status: active`、`enforcement.mode: strict`。
+- 自动发现的新规则候选仍默认 `level: recommended`、`status: proposed`、`enforcement.mode: advisory`。
 
 ## 执行步骤
 
@@ -48,7 +70,7 @@ argument-hint: [项目说明]
    - `Makefile`
    - `.editorconfig`
    - lint / format / test 配置
-4. 创建或补齐以下文件：
+4. 按“模板来源”创建或补齐以下文件；新建时复制完整模板，补齐时只补缺失项，不覆盖用户已有值：
 
 ```text
 .spec-flow-kit/
@@ -76,6 +98,9 @@ enforcement:
 7. 输出初始化结果，包括：
    - 创建了哪些文件。
    - 跳过了哪些已有文件。
+   - 哪些文件按模板新建。
+   - 哪些文件按模板补齐。
+   - 哪些已有字段因用户已有值而保留。
    - 自动探测到了哪些命令。
    - 哪些字段需要用户手动确认。
    - 下一步建议。

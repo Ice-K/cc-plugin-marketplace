@@ -68,7 +68,7 @@ Feature 解析顺序：
 - `.spec-flow-kit/features/<FEATURE-ID>/traceability.json`
 - `.spec-flow-kit/features/<FEATURE-ID>/evidence.jsonl`
 - `.spec-flow-kit/features/<FEATURE-ID>/status.json`
-- `project-profile.yaml` 中与 verification、testing 相关的 `rules.files`
+- 按 `rules.yaml` 过滤出的适用于 `verification` 阶段的唯一 `source` 文件（规范化路径并去重，每个文件最多读取一次）
 
 按需读取：
 
@@ -77,6 +77,18 @@ Feature 解析顺序：
 - 相关源码文件和测试文件
 - 项目配置文件，例如 package scripts、测试配置、lint/typecheck 配置
 - 用户提供的外部 CI 链接或报告
+
+## 运行时规则加载协议
+
+当前阶段：`verification`。
+
+1. 读取 `.spec-flow-kit/rules.yaml`。
+2. 选择 `status: active` 且 `appliesTo` 包含 `verification` 的规则。
+3. 按 priority、level、enforcement.mode 分组，列出 required / recommended / informational。
+4. 从选中规则提取 `source`，规范化为项目相对路径并去重。
+5. 每个唯一 `source` 文件最多读取一次。
+6. `required + strict` 规则必须读取正文全文，并纳入验证矩阵或规则符合性缺口。
+7. 如果 source 缺失，记录为规则加载缺口；影响 required strict 规则时不得把 `verification-passed` 标记为 `passed`。
 
 ## 执行步骤
 
@@ -185,6 +197,14 @@ Evidence 类型规则：
 Feature: <FEATURE-ID>
 Gate: verification-passed = passed / blocked / failed
 Stage: verification_passed / verification_blocked / verification_failed
+
+规则加载：
+- 阶段：verification
+- active applicable rules: N
+- required/strict: N
+- 已读取规则文件：N
+- 已跳过重复 source：N
+- 缺失 source：N
 
 Requirement 覆盖：
 - REQ-001: pass / partial / blocked / failed

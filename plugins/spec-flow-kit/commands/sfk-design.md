@@ -34,7 +34,19 @@ Feature 解析顺序：
 - 默认不运行 Bash。
 - 不覆盖用户已手动修改的设计文档；如果文件已存在，先读取并增量更新或询问用户。
 - 设计必须覆盖 requirements 中的验收标准、边界情况、风险和非功能需求。
-- 必须读取 `project-profile.yaml` 中 `rules.files` 指向的相关规则。
+- 必须按“运行时规则加载协议”读取适用于 `design` 阶段的规则；`rules.yaml` 是运行时主入口，`project-profile.yaml.rules.files` 只用于同步检查和兜底诊断。
+
+## 运行时规则加载协议
+
+当前阶段：`design`。
+
+1. 读取 `.spec-flow-kit/rules.yaml`。
+2. 选择 `status: active` 且 `appliesTo` 包含 `design` 的规则。
+3. 按 priority、level、enforcement.mode 分组，列出 required / recommended / informational。
+4. 从选中规则提取 `source`，规范化为项目相对路径并去重。
+5. 每个唯一 `source` 文件最多读取一次。
+6. `required + strict` 规则必须读取正文全文；recommended / informational 可读取摘要或相关段落。
+7. 如果 source 缺失，记录为规则加载缺口，并在设计阻塞项中说明。
 
 ## 执行步骤
 
@@ -45,7 +57,7 @@ Feature 解析顺序：
    - `.spec-flow-kit/project-profile.yaml`
    - `.spec-flow-kit/rules.yaml`
    - `.spec-flow-kit/features/<FEATURE-ID>/requirements.md`
-   - `project-profile.yaml` 中与设计相关的 `rules.files`
+   - 按 `rules.yaml` 过滤出的适用于 `design` 阶段的唯一 `source` 文件（规范化路径并去重，每个文件最多读取一次）
 3. 只读分析相关源码结构和项目配置。
 4. 生成或更新：
 
@@ -81,6 +93,12 @@ Feature 解析顺序：
 
 Feature: <FEATURE-ID>
 Gate: design-ready = passed / blocked
+
+规则加载：
+- active applicable rules: N
+- required/strict: N
+- 已读取规则文件：N
+- 缺失 source：N
 
 已生成或更新：
 - design.md

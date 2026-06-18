@@ -36,6 +36,18 @@ Feature 解析顺序：
 - 每个任务应声明适用 rules。
 - `traceability.md` 给人读，`traceability.json` 给工具读，二者必须保持一致。
 
+## 运行时规则加载协议
+
+当前阶段：`plan`。
+
+1. 读取 `.spec-flow-kit/rules.yaml`。
+2. 选择 `status: active` 且 `appliesTo` 包含 `plan` 的规则。
+3. 按 priority、level、enforcement.mode 分组，列出 required / recommended / informational。
+4. 从选中规则提取 `source`，规范化为项目相对路径并去重。
+5. 每个唯一 `source` 文件最多读取一次。
+6. 任务中的“适用 rules”必须引用已选中的规则 ID。
+7. 如果 source 缺失，记录为规则加载缺口，并在 plan-ready gate 中标记 blocked。
+
 ## 执行步骤
 
 1. 解析目标 feature。
@@ -45,7 +57,7 @@ Feature 解析顺序：
    - `adr.md`
    - `test-plan.md`
    - `.spec-flow-kit/rules.yaml`
-   - `project-profile.yaml` 中与计划和测试相关的 `rules.files`
+   - 按 `rules.yaml` 过滤出的适用于 `plan` 阶段的唯一 `source` 文件（规范化路径并去重，每个文件最多读取一次）
 3. 生成或更新：
 
 ```text
@@ -78,6 +90,12 @@ Feature 解析顺序：
 
 Feature: <FEATURE-ID>
 Gate: plan-ready = passed / blocked
+
+规则加载：
+- active applicable rules: N
+- required/strict: N
+- 已读取规则文件：N
+- 缺失 source：N
 
 任务数：N
 Traceability: 已初始化 / 已更新

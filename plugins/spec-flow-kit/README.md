@@ -85,9 +85,9 @@ Markdown 文件面向人阅读，默认使用中文。JSON / JSONL / YAML 文件
 计划默认策略保持保守：
 
 - 默认不执行部署命令。
-- 默认不启用阻断型 hooks。
-- hooks 引入时默认先作为提示型检查。
-- 自动发现的 rules 先进入 proposed 状态，用户确认后才进入 strict enforcement。
+- 内置规则模板默认使用 `required / active / strict`，用于提供明确的 SDD 约束。
+- 自动发现的新规则候选默认使用 `recommended / proposed / advisory`，用户确认后才升级为 active 或 strict。
+- hooks 引入时默认先作为提示型检查；strict gate 脚本已提供，但是否阻断取决于用户配置和当前 gate/rule 状态。
 - Verification evidence 必须区分真实命令输出和 Claude 推断。
 - secrets、token、private key、credentials 不应写入 reports 或 evidence 文件。
 - 如果未来支持生产部署，默认只生成 runbook；除非用户显式确认，否则不执行。

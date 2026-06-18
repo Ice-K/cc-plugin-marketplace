@@ -14,7 +14,7 @@
 
 - feature 可以记录当前 branch 和 git ref 作为元数据。
 - spec-flow-kit 不会自动切换 branch 或 worktree。
-- 如果 active feature 记录的 branch 与当前 branch 不一致，advisory 模式下只提示，不阻断。
+- 如果 active feature 记录的 branch 与当前 branch 不一致，strict 模式下应作为阻断项或要求用户确认后继续。
 
 ## Commit 策略
 
@@ -22,4 +22,12 @@
 
 ## 执行方式
 
-默认模式：advisory。
+默认等级：强制（required）  
+默认状态：active  
+默认执行模式：strict
+
+等级说明：
+
+- 强制（required）：必须满足，在 strict 模式下可作为阻断依据。
+- 推荐（recommended）：建议遵守，通常形成改进建议。
+- 参考（informational）：提供上下文，不应作为阻断依据。

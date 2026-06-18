@@ -60,7 +60,19 @@ Feature 解析顺序：
 - `.spec-flow-kit/features/<FEATURE-ID>/evidence.jsonl`
 - `.spec-flow-kit/features/<FEATURE-ID>/status.json`
 - `.spec-flow-kit/features/<FEATURE-ID>/waivers.json`（如果存在）
-- `project-profile.yaml` 中相关 `rules.files`
+- 按 `rules.yaml` 过滤出的适用于 `audit` 阶段的唯一 `source` 文件（规范化路径并去重，每个文件最多读取一次）
+
+## 运行时规则加载协议
+
+当前阶段：`audit`。
+
+1. 读取 `.spec-flow-kit/rules.yaml`。
+2. 选择 `status: active` 且 `appliesTo` 包含 `audit` 的规则。
+3. 按 priority、level、enforcement.mode 分组，列出 required / recommended / informational。
+4. 从选中规则提取 `source`，规范化为项目相对路径并去重。
+5. 每个唯一 `source` 文件最多读取一次。
+6. 审计时同时检查 `project-profile.yaml.rules.files` 与 `rules.yaml.rules[].source` 是否一致，但不要把 `rules.files` 作为主加载入口。
+7. 缺失 source、重复 source、未索引规则文件和失效 rules.files 都应作为 audit finding 输出。
 
 ## 审计内容
 
@@ -104,8 +116,10 @@ Feature 解析顺序：
 检查：
 
 - `rules.yaml` 是否存在并可解析。
-- `project-profile.yaml` 的 `rules.files` 是否指向存在文件。
-- feature artifact 是否明显违反 active/required rules。
+- active 且适用于 `audit` 的规则是否能按 source 成功加载。
+- `rules.yaml.rules[].source` 是否存在重复、缺失或路径不规范。
+- `project-profile.yaml.rules.files` 是否与实际 `.spec-flow-kit/rules/*.md` 和 `rules.yaml.rules[].source` 一致。
+- feature artifact 是否明显违反 active/required/strict rules。
 - 是否需要运行 `/sfk-rules-sync`。
 
 ## 输出格式
@@ -127,7 +141,11 @@ Evidence:
 - ...
 
 Rules:
-- ...
+- active applicable rules: N
+- required/strict: N
+- loaded sources: N
+- duplicate sources skipped: N
+- missing sources: N
 
 Waivers:
 - ...

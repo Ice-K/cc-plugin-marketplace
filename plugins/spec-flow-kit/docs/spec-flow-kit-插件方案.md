@@ -864,7 +864,7 @@ status: proposed | active | deprecated
 - 发现已删除但仍在 `rules.yaml` 中引用的规则。
 - 发现 `sourceLines` 可能失效的规则。
 - 从规则正文提取候选结构化规则。
-- 更新 `rules.yaml`，新规则默认 `status: proposed` 且 `enforcement.mode: advisory`。
+- 更新 `rules.yaml`，新发现规则候选默认 `level: recommended`、`status: proposed` 且 `enforcement.mode: advisory`。
 - 同步更新 `project-profile.yaml` 中的 `rules.files`，确保新增、删除或重命名的规则文件能被后续命令加载。
 - 输出需要用户确认的规则列表。
 
@@ -896,7 +896,7 @@ status: proposed | active | deprecated
 - 高风险环境命令必须用户确认。
 - production 默认 `deploy: manual`，不自动执行。
 - 当 `/sfk-rules-sync` 发现规则文件新增、删除或重命名时，应同步维护 `rules.files`。
-- `rules.files` 是后续命令加载规则正文的入口，必须与实际 `rules/*.md` 文件保持一致。
+- `rules.files` 是规则文件发现和同步清单；运行时加载规则应以 `rules.yaml` 为主入口，并按阶段过滤、规范化 source、去重读取规则正文。
 - 对于用户手动添加且文件仍存在的 `rules.files` 条目，插件不应自动删除。
 - 对于文件已不存在的 `rules.files` 条目，插件应提示用户确认后再移除。
 
@@ -1062,7 +1062,7 @@ spec-flow-kit/
 
 - 不修改业务代码。
 - 不运行安装、测试、构建或部署命令。
-- 不把自动发现的规范直接设为 strict。
+- 不把自动发现的规范直接设为 active / strict。
 
 失败行为：
 
@@ -1514,7 +1514,7 @@ plugins/spec-flow-kit/hooks/hooks.json
 Hook 设计要求：
 
 - 必须说明触发事件、matcher、输入 JSON、输出行为、退出码语义。
-- 默认 advisory，不阻断用户。
+- 默认提示型 hooks 不阻断用户；strict gate 脚本是否阻断取决于用户配置和当前 gate/rule 状态。
 - strict mode 必须由用户显式启用。
 - hooks 不应读取或输出 secrets。
 - hooks 不应自动运行部署命令。
@@ -1761,7 +1761,7 @@ sfk.next_action
 - 默认不读取 secrets 文件。
 - 默认不把 token、password、private key 写入 reports。
 - production deploy 永远只生成 runbook，除非用户显式确认并授权执行。
-- 自动发现的 rules 默认是 proposed，不直接变成 strict required。
+- 自动发现的 rules 默认是 `recommended / proposed / advisory`，不直接变成 active / strict required。
 - Claude 推断不能伪装成实际运行 evidence。
 
 README 和 marketplace 描述必须明确：
@@ -1769,7 +1769,7 @@ README 和 marketplace 描述必须明确：
 - 插件会创建 `.spec-flow-kit/`。
 - 插件可能读取项目文档和配置来生成 project profile。
 - 插件可能在用户授权下运行测试、lint、typecheck、build。
-- 插件 hooks 默认 advisory。
+- 插件 hooks 默认提示型；strict gate 脚本是否阻断取决于用户配置和当前 gate/rule 状态。
 - 用户可以禁用 hooks 或 strict mode。
 
 ---
@@ -1797,7 +1797,7 @@ README 和 marketplace 描述必须明确：
 
 规避：
 
-- MVP 默认 advisory。
+- hooks / gates 默认保守提示；内置规则模板默认 strict，是否阻断取决于用户配置、gate 状态和 waiver。
 - gate 支持 `waived`。
 - strict mode 后续显式启用。
 
