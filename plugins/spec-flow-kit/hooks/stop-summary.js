@@ -150,10 +150,7 @@ async function main() {
     }
 
     const activeFeature = sanitizeLine(state.activeFeature, 80);
-    if (!activeFeature) {
-      emitAdditionalContext('spec-flow-kit advisory summary:\nNo active feature is selected. If you are working on a spec-flow-kit feature, run /sfk-use <FEATURE-ID> or /sfk-status --all.');
-      return;
-    }
+    if (!activeFeature) return;
 
     const featureDir = safeFeatureDir(projectRoot, state, activeFeature);
     const gatesResult = readJsonIfExists(path.join(specRoot, 'gates.json'));

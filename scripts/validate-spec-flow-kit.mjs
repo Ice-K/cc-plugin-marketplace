@@ -266,6 +266,12 @@ function getTopCommentBlock(text, relativePath) {
 
 const UNIFIED_OUTPUT_RULE = '不要在最终输出中重复声明权限边界';
 
+const INIT_MCP_RESOURCE_GUARD_EXPECTATIONS = [
+  '`/sfk-init` 不使用 ListMcpResources 或 MCP resources 读取模板。',
+  '插件 MCP server 在 Claude Code 中的完整名称形如 `plugin:spec-flow-kit:spec-flow-kit`；不要猜测 `plugin_spec-flow-kit`。',
+  '该 MCP server 暴露工具而不是 resources，模板来源应使用插件文件路径 `templates/`。',
+];
+
 const COMMAND_BOUNDARY_EXPECTATIONS = {
   'sfk-status': [
     '默认只读，不主动修改源码或 `.spec-flow-kit/` artifact。',
@@ -447,6 +453,12 @@ function validateMcp() {
   }
 }
 
+function validateInitMcpResourceGuard() {
+  for (const expectedText of INIT_MCP_RESOURCE_GUARD_EXPECTATIONS) {
+    assertMentioned('commands/sfk-init.md', expectedText);
+  }
+}
+
 function validateNoStaleGitkeep() {
   for (const directory of ['agents', 'skills', 'hooks']) {
     const dirPath = join(pluginRoot, directory);
@@ -464,6 +476,7 @@ validateSkills();
 validateHooks();
 validateSchemasAndTemplates();
 validateMcp();
+validateInitMcpResourceGuard();
 validateNoStaleGitkeep();
 
 if (errors.length > 0) {

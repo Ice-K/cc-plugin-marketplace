@@ -45,7 +45,9 @@ argument-hint: [项目说明]
 
 ## 模板来源
 
-创建或补齐基础文件时，以插件内置模板作为结构基准：
+创建或补齐基础文件时，以插件内置模板作为结构基准。
+
+`/sfk-init` 不使用 ListMcpResources 或 MCP resources 读取模板。插件 MCP server 在 Claude Code 中的完整名称形如 `plugin:spec-flow-kit:spec-flow-kit`；不要猜测 `plugin_spec-flow-kit`。该 MCP server 暴露工具而不是 resources，模板来源应使用插件文件路径 `templates/`。
 
 ```text
 plugins/spec-flow-kit/templates/flow.yaml

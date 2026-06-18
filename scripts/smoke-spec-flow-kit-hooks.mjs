@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -124,8 +124,11 @@ const stopReentrant = runHook('stop-summary.js', { cwd: fixtureRoot, stop_hook_a
 assert(stopReentrant.status === 0, 'stop-summary should exit 0 when stop_hook_active is true');
 assert(parseHookJson(stopReentrant.stdout) == null, 'stop-summary must emit no JSON when stop_hook_active is true');
 
-// Regression for the reported loop: with no active feature, the first Stop
-// invocation emits the advisory once, but a reentrant invocation must stay silent.
+// Regression for /sfk-init completion: when initialization has created a
+// workspace but no feature exists yet, Stop must stay silent. Emitting
+// additionalContext here makes Claude Code continue the turn after /sfk-init's
+// final "下一步" summary, which looks like the next-step hint was handled as
+// follow-up input.
 writeJson(path.join(specRoot, 'state.json'), {
   version: 1,
   activeFeature: null,
@@ -135,7 +138,8 @@ writeJson(path.join(specRoot, 'state.json'), {
   updatedAt: null,
 });
 const stopNoFeatureFirst = runHook('stop-summary.js', { cwd: fixtureRoot });
-assert(parseHookJson(stopNoFeatureFirst.stdout)?.hookSpecificOutput?.additionalContext?.includes('No active feature'), 'stop-summary should mention no active feature on first invocation');
+assert(stopNoFeatureFirst.status === 0, 'stop-summary should exit 0 when no active feature is selected');
+assert(parseHookJson(stopNoFeatureFirst.stdout) == null, 'stop-summary must emit no JSON when no active feature is selected');
 const stopNoFeatureReentrant = runHook('stop-summary.js', { cwd: fixtureRoot, stop_hook_active: true });
 assert(parseHookJson(stopNoFeatureReentrant.stdout) == null, 'stop-summary must emit no JSON when stop_hook_active is true even with no active feature');
 
