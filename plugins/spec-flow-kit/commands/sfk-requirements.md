@@ -23,9 +23,22 @@ argument-hint: "<需求描述>"
 - 不修改业务代码。
 - 不运行 Bash。
 - 不覆盖已有 feature 目录。
-- 如果需求不清楚，先提出澄清问题，绝不瞎猜。
+- 如果需求不清楚，先进入 TUI 逐步澄清，绝不瞎猜。
 - 新 feature 创建后，应更新 `state.json` 的 `activeFeature` 和 `features` 索引。
-- 新需求足够明确时，`requirements-ready` gate 可标记为 `passed`；不明确时标记为 `blocked`。
+- 新需求足够明确时，`requirements-ready` gate 可标记为 `passed`；不明确且属于已有 artifact 或非用户澄清阻塞时标记为 `blocked`。
+
+## 用户澄清门
+
+在生成 Feature ID、创建 feature 目录、写入 `requirements.md`、初始化状态文件、更新 gate/status/traceability/evidence/runs 之前，必须先判断是否存在用户拥有的未决信息。
+
+用户拥有的未决信息包括但不限于：业务语义、验收口径、优先级、范围取舍、关键约束、外部系统状态、人工确认、覆盖已有内容的策略或风险接受。
+
+如果存在用户拥有的未决信息：
+
+1. 立即停止，不写入任何文件，不更新 gate / status / traceability / evidence / runs。
+2. 在 TUI 交互中逐步澄清（Step-by-Step Clarification），保持清爽的一问一答体验，不一次性输出问题清单。
+3. 除非答案已经由用户输入、现有 artifacts、项目配置、rules 或源码 100% 明确给出，否则不得猜测。
+4. 不在生成的 artifacts 中创建默认“待澄清问题”章节；需要澄清时应在写入前阻塞。
 
 ## Feature ID 规则
 
@@ -66,7 +79,8 @@ FEATURE-<SHORT-NAME>-001
    - 验收标准。
    - 边界情况。
    - 风险和假设。
-   - 待澄清问题。
+   
+   如果提炼上述内容需要用户补充或决策，必须先按“用户澄清门”暂停，不得继续创建 artifact。
 4. 创建：
 
 ```text
@@ -102,7 +116,7 @@ Feature: <FEATURE-ID>
 - status.json
 - traceability.json
 
-待澄清：
+阻塞项：
 - ...
 
 下一步：

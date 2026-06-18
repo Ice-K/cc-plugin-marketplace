@@ -36,6 +36,19 @@ Feature 解析顺序：
 - 设计必须覆盖 requirements 中的验收标准、边界情况、风险和非功能需求。
 - 必须按“运行时规则加载协议”读取适用于 `design` 阶段的规则；`rules.yaml` 是运行时主入口，`project-profile.yaml.rules.files` 只用于同步检查和兜底诊断。
 
+## 用户澄清门
+
+在生成或更新 `design.md`、`adr.md`、`test-plan.md`、status、gate、evidence 或 runs 之前，必须先判断是否存在用户拥有的未决信息。
+
+用户拥有的未决信息包括但不限于：架构取舍、接口契约、数据模型、错误处理口径、安全策略、测试策略、发布/回滚边界、规则缺口处理方式或风险接受。
+
+如果存在用户拥有的未决信息：
+
+1. 立即停止，不写入任何文件，不更新 gate / status / traceability / evidence / runs。
+2. 在 TUI 交互中逐步澄清（Step-by-Step Clarification），保持清爽的一问一答体验，不一次性输出问题清单。
+3. 除非答案已经由用户输入、现有 artifacts、项目配置、rules 或源码 100% 明确给出，否则不得猜测。
+4. 不在生成的 artifacts 中创建默认“待澄清问题”章节；需要澄清时应在写入前阻塞。
+
 ## 运行时规则加载协议
 
 当前阶段：`design`。
@@ -84,7 +97,6 @@ Feature 解析顺序：
 - 可观测性。
 - 备选方案。
 - 发布和回滚说明。
-- 待澄清问题。
 
 ## 输出要求
 

@@ -36,6 +36,19 @@ Feature 解析顺序：
 - 每个任务应声明适用 rules。
 - `traceability.md` 给人读，`traceability.json` 给工具读，二者必须保持一致。
 
+## 用户澄清门
+
+在生成或更新 `tasks.md`、`traceability.md`、`traceability.json`、status、gate、evidence 或 runs 之前，必须先判断是否存在用户拥有的未决信息。
+
+用户拥有的未决信息包括但不限于：任务范围、优先级、实施顺序、验收口径、requirement/design 映射、规则适用性、证据要求或完成定义。
+
+如果存在用户拥有的未决信息：
+
+1. 立即停止，不写入任何文件，不更新 gate / status / traceability / evidence / runs。
+2. 在 TUI 交互中逐步澄清（Step-by-Step Clarification），保持清爽的一问一答体验，不一次性输出问题清单。
+3. 除非答案已经由用户输入、现有 artifacts、项目配置、rules 或源码 100% 明确给出，否则不得猜测。
+4. 不在生成的 artifacts 中创建默认“待澄清问题”章节；需要澄清时应在写入前阻塞。
+
 ## 运行时规则加载协议
 
 当前阶段：`plan`。

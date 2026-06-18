@@ -1079,7 +1079,7 @@ spec-flow-kit/
 - 创建 feature index 记录，并默认将新 feature 设置为 active feature。
 - 生成需求文档。
 - 提炼用户故事、功能需求、非功能需求、验收标准、边界条件、非目标、风险。
-- 如果需求不清楚，先提出澄清问题。
+- 如果需求不清楚，先在 TUI 交互中逐步澄清（Step-by-Step Clarification），不一次性输出问题清单，也不写入正式 artifact。
 
 输入：
 
@@ -1095,11 +1095,13 @@ spec-flow-kit/
 
 写入：
 
-- `.spec-flow-kit/features/<FEATURE-ID>/requirements.md`
-- `.spec-flow-kit/features/<FEATURE-ID>/status.json`
-- `.spec-flow-kit/features/<FEATURE-ID>/evidence.jsonl`
-- `.spec-flow-kit/state.json`
-- `.spec-flow-kit/gates.json`
+- 仅当需求已经足够明确且不存在用户拥有的未决信息时，才写入以下文件：
+  - `.spec-flow-kit/features/<FEATURE-ID>/requirements.md`
+  - `.spec-flow-kit/features/<FEATURE-ID>/status.json`
+  - `.spec-flow-kit/features/<FEATURE-ID>/evidence.jsonl`
+  - `.spec-flow-kit/state.json`
+  - `.spec-flow-kit/gates.json`
+- 如果需要用户澄清，命令必须先暂停，不创建 feature 目录，也不更新 gate/status/evidence。
 
 权限边界：
 
@@ -1109,8 +1111,9 @@ spec-flow-kit/
 Gate：
 
 - 生成 `requirements-ready`。
-- 需求不清楚时为 `blocked`。
 - 需求足够明确时为 `passed`。
+- 需求不清楚且属于用户拥有的未决信息时，先通过 TUI 逐步澄清，不能用带“待澄清问题”的正式 requirements artifact 代替对话澄清。
+- 已有 artifact 或非用户澄清类阻塞可标记为 `blocked`。
 
 ### 13.3 `/sfk-use`
 

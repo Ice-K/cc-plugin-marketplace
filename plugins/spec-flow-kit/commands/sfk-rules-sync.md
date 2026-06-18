@@ -54,6 +54,21 @@ argument-hint: [--check|--apply]
 - 不把 Claude 推断当成用户确认。
 - secrets、token、private key、credentials 不应写入规则索引、报告或命令输出。
 
+## 用户澄清门
+
+在 `--apply` 或用户确认后的写入模式中，更新 `project-profile.yaml`、`rules.yaml`、`gates.json` 之前，必须先判断是否存在用户拥有的未决信息。
+
+用户拥有的未决信息包括但不限于：规则标题、规则分类、appliesTo 范围、level/status/enforcement 升降级、删除条目、覆盖已有配置或风险接受。
+
+如果存在用户拥有的未决信息：
+
+1. 立即停止，不写入任何文件，不更新 gate / status / traceability / evidence / runs。
+2. 在 TUI 交互中逐步澄清（Step-by-Step Clarification），保持清爽的一问一答体验，不一次性输出问题清单。
+3. 除非答案已经由用户输入、现有 artifacts、项目配置、rules 或源码 100% 明确给出，否则不得猜测。
+4. 不在生成的 artifacts 中创建默认“待澄清问题”章节；需要澄清时应在写入前阻塞。
+
+无参数或 `--check` 的只读检查可以报告候选差异；但不得把需要用户决策的候选项直接写入。
+
 ## 读取文件
 
 必须读取：
@@ -120,7 +135,7 @@ Rule ID 建议格式：
 RULE-<CATEGORY>-<NUMBER>
 ```
 
-如果无法从规则正文可靠提取标题，使用文件名生成候选标题，并将该项列入“需要用户确认”。
+如果无法从规则正文可靠提取标题，只读检查时使用文件名生成候选标题并标记为需人工复核；写入模式下若标题会影响正式索引，必须先按“用户澄清门”逐步澄清。
 
 ## 执行步骤
 
@@ -138,8 +153,9 @@ RULE-<CATEGORY>-<NUMBER>
    - `rules.yaml` 中 source 不存在的规则。
    - 需要用户确认的字段。
 7. 如果是 `--check`：只输出检查结果，不写入。
-8. 如果是无参数：输出建议变更；如需要写入，先请求用户确认。
+8. 如果是无参数：输出建议变更；如需要写入，先按“用户澄清门”逐步澄清并取得用户确认。
 9. 如果是 `--apply`：
+   - 写入前先执行“用户澄清门”；存在用户拥有的未决信息时停止，不修改文件。
    - 更新 `project-profile.yaml` 中的 `rules.files`。
    - 更新 `rules.yaml` 中的 `rules[]`。
    - 对新发现规则使用 `status: proposed` 和 `enforcement.mode: advisory`。
@@ -197,7 +213,7 @@ rules.yaml：
 - rules.yaml: yes / no
 - gates.json: yes / no
 
-需要用户确认：
+需要人工复核：
 - ...
 
 下一步：

@@ -80,6 +80,12 @@ MVP 会生成并维护如下文件：
 
 Markdown 文件面向人阅读，默认使用中文。JSON / JSONL / YAML 文件面向工具、gate、状态检查、traceability 和 evidence 验证，字段名保持英文。YAML 模板使用中文注释说明配置含义；JSON 模板使用 `_comment` 或 `*Comment` 字段提供中文说明。
 
+## 澄清优先策略
+
+所有会创建、更新、追加或补齐正式 artifact 的命令都必须先判断是否存在用户拥有的未决信息。如果继续执行需要业务语义、验收口径、范围取舍、外部系统状态、人工确认、覆盖策略、规则升级/降级意图、部署授权或风险接受，命令应在写入前暂停，并在 TUI 交互中逐步澄清（Step-by-Step Clarification）。
+
+澄清期间不得写入 `requirements.md`、`design.md`、`tasks.md`、traceability、status、gates、evidence 或 runs，也不得用默认“待澄清问题”章节代替对话澄清。正式 Markdown artifact 应只记录已经足够明确、可进入下一阶段的信息。
+
 ## 安全边界
 
 计划默认策略保持保守：

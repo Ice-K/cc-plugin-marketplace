@@ -25,13 +25,14 @@ Use this skill to keep `spec-flow-kit` work aligned with the local spec-driven d
 - Every design decision that affects implementation should have a stable ID.
 - Every task should reference requirements, design decisions, applicable rules, expected code changes, expected tests, and required evidence.
 - Gate states should be explicit: `passed`, `blocked`, `failed`, or `waived` where supported by the file protocol.
-- Do not advance a gate by guessing. If inputs are unclear, mark the gate blocked and list required actions.
+- Do not advance a gate by guessing. If continuing requires user-owned information, stop before writing artifacts and clarify in the TUI with Step-by-Step Clarification.
+- Do not use default “open questions” or “待澄清问题” artifact sections as a substitute for user clarification.
 
 ## Minimal Artifact Expectations
 
 ### requirements.md
 
-Include summary, goals, non-goals, user stories, functional requirements, non-functional requirements, acceptance criteria, edge cases, risks, assumptions, and open questions.
+Include summary, goals, non-goals, user stories, functional requirements, non-functional requirements, acceptance criteria, edge cases, risks, and assumptions. If user-owned information is still missing, do not write `requirements.md`; clarify first in the TUI.
 
 ### design.md
 
@@ -47,4 +48,4 @@ For each task, include task ID, description, requirement IDs, design IDs, rules,
 
 ## Readiness Heuristic
 
-A stage is ready only when the next stage can proceed without inventing missing facts. If the next stage would need to guess, the current gate should remain blocked.
+A stage is ready only when the next stage can proceed without inventing missing facts. If the next stage would need to guess because user-owned information is missing, the current command should stop before artifact writes and use TUI Step-by-Step Clarification. Existing non-clarification blockers may still be represented with `blocked` gate/status fields.

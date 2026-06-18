@@ -34,7 +34,7 @@ Task 解析规则：
 
 1. 如果传入 `--task TASK-ID`，只处理该任务。
 2. 如果未传入 task，优先处理 `tasks.md` 中未完成或阻塞解除后的任务。
-3. 如果任务范围不清晰，先说明可选任务并请求用户确认。
+3. 如果任务范围不清晰，先按“用户澄清门”在 TUI 中逐步澄清，不要修改代码或更新 artifacts。
 
 ## 前置条件
 
@@ -59,6 +59,19 @@ Task 解析规则：
 - `traceability.json` 中的 status 只能使用：`pending`、`pass`、`partial`、`blocked`、`failed`。
 - `evidence.jsonl` 中的 type 只能使用：`actual-command`、`external-ci`、`user-confirmed`、`manual-review`、`claude-inferred`。
 - secrets、token、private key、credentials 不得写入 traceability、evidence、runs 或报告。
+
+## 用户澄清门
+
+在修改业务代码、测试代码、traceability、status、gate、evidence 或 runs 之前，必须先判断是否存在用户拥有的未决信息。
+
+用户拥有的未决信息包括但不限于：任务选择、实现范围、实现策略、严格规则豁免、依赖安装、破坏性操作授权、外部环境、测试命令选择或风险接受。
+
+如果存在用户拥有的未决信息：
+
+1. 立即停止，不写入任何文件，不更新 gate / status / traceability / evidence / runs。
+2. 在 TUI 交互中逐步澄清（Step-by-Step Clarification），保持清爽的一问一答体验，不一次性输出问题清单。
+3. 除非答案已经由用户输入、现有 artifacts、项目配置、rules 或源码 100% 明确给出，否则不得猜测。
+4. 不在生成的 artifacts 中创建默认“待澄清问题”章节；需要澄清时应在写入前阻塞。
 
 ## 读取文件
 

@@ -51,6 +51,21 @@ Feature 解析顺序：
 - `evidence.jsonl` 中的 type 只能使用：`actual-command`、`external-ci`、`user-confirmed`、`manual-review`、`claude-inferred`。
 - secrets、token、private key、credentials 不得写入 verification、reports、traceability、evidence 或 runs。
 
+## 用户澄清门
+
+在生成或更新 `verification.md`、reports、traceability、status、gate、evidence 或 runs 之前，必须先判断是否存在用户拥有的未决信息。
+
+用户拥有的未决信息包括但不限于：外部 CI 结果、人工验收结果、用户确认、验证环境、测试命令选择、证据来源可信度、缺口是否可豁免或风险接受。
+
+如果存在用户拥有的未决信息：
+
+1. 立即停止，不写入任何文件，不更新 gate / status / traceability / evidence / runs。
+2. 在 TUI 交互中逐步澄清（Step-by-Step Clarification），保持清爽的一问一答体验，不一次性输出问题清单。
+3. 除非答案已经由用户输入、现有 artifacts、项目配置、rules、源码或本次真实命令输出 100% 明确给出，否则不得猜测。
+4. 不在生成的 artifacts 中创建默认“待澄清问题”章节；需要澄清时应在写入前阻塞。
+
+客观验证失败或真实命令输出已经明确时，可以记录失败结果；不得用用户澄清门掩盖实际失败。
+
 ## 读取文件
 
 必须读取：

@@ -33,8 +33,9 @@ Feature 解析顺序：
 环境解析：
 
 1. 显式 `local`、`staging` 或 `production`。
-2. 未指定时使用 `staging` 作为文档模板目标。
-3. production 只生成 runbook，不执行命令。
+2. 未指定且用户目标不依赖具体环境时，可使用 `staging` 作为文档模板目标。
+3. 如果目标环境会影响 runbook、风险或授权，先按“用户澄清门”逐步澄清，不要静默默认。
+4. production 只生成 runbook，不执行命令。
 
 ## 必须遵守
 
@@ -45,6 +46,19 @@ Feature 解析顺序：
 - 不把 Claude 推断当成 actual evidence。
 - 不输出 secrets、token、password、private key、credentials。
 - 默认使用中文编写 Markdown 产物。
+
+## 用户澄清门
+
+在生成或更新 `deploy-plan.md`、`rollback-plan.md`、status、gate、evidence 或 runs 之前，必须先判断是否存在用户拥有的未决信息。
+
+用户拥有的未决信息包括但不限于：目标环境、production 授权、部署范围、回滚权限、人工确认、Go / No-Go 口径、外部系统状态、配置来源或风险接受。
+
+如果存在用户拥有的未决信息：
+
+1. 立即停止，不写入任何文件，不更新 gate / status / traceability / evidence / runs。
+2. 在 TUI 交互中逐步澄清（Step-by-Step Clarification），保持清爽的一问一答体验，不一次性输出问题清单。
+3. 除非答案已经由用户输入、现有 artifacts、项目配置、rules、源码或真实 evidence 100% 明确给出，否则不得猜测。
+4. 不在生成的 artifacts 中创建默认“待澄清问题”章节；需要澄清时应在写入前阻塞。
 
 ## 读取文件
 

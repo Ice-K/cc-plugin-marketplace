@@ -3,7 +3,7 @@
 # 文件用途：把 rules/*.md 中的自然语言规则结构化，方便 Gate、Audit 和 /sfk-* 命令按范围加载。
 # 关系说明：rules/*.md 是规则正文；rules.yaml 是结构化索引和执行元数据，不替代规则正文。
 # 维护方式：/sfk-rules-sync 可同步 rules/*.md、rules.yaml 和 project-profile.yaml 的 rules.files。
-# 治理原则：插件内置模板规则默认 level: required、status: active、enforcement.mode: strict；自动发现的新规则候选默认保持 status: proposed 和 enforcement.mode: advisory，必须由用户确认后才能升级为 active / strict。
+# 治理原则：插件内置模板规则默认 level: required、status: active、enforcement.mode: strict；自动发现的规则默认保持 status: proposed 和 enforcement.mode: advisory，必须由用户确认后才能升级为 active / strict。
 #
 # 固定取值：
 # - priority 固定优先级：feature > project > team > organization > plugin-default。
