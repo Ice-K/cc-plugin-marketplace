@@ -49,9 +49,10 @@ Task 解析规则：
 ## 必须遵守
 
 - 默认使用中文编写 Markdown 产物。
-- 可以修改业务代码和测试代码，但必须限制在目标 feature 和选定 task 范围内。
-- 不执行 install、deploy、release、production、数据迁移或破坏性命令，除非用户显式确认。
-- 运行本地 lint、typecheck、test 或 build 前，优先使用 `project-profile.yaml` 中已配置的命令或项目已有脚本。
+- 可以修改业务代码和测试代码。
+- 修改范围必须绑定目标 feature 和选定 task。
+- 可以运行必要的 lint、typecheck、test、build，优先使用 `project-profile.yaml` 或项目已有脚本。
+- 不执行 install、deploy、release、production、数据迁移或破坏性命令，除非用户明确确认。
 - 不把 Claude 推断当成 actual evidence。
 - 不伪造测试结果、CI 结果、用户确认或命令输出。
 - 不设置 `verification-passed`；验证阶段由 `/sfk-verify` 负责。
@@ -59,6 +60,7 @@ Task 解析规则：
 - `traceability.json` 中的 status 只能使用：`pending`、`pass`、`partial`、`blocked`、`failed`。
 - `evidence.jsonl` 中的 type 只能使用：`actual-command`、`external-ci`、`user-confirmed`、`manual-review`、`claude-inferred`。
 - secrets、token、private key、credentials 不得写入 traceability、evidence、runs 或报告。
+- 不要在最终输出中重复声明权限边界，例如“不修改业务代码”“不运行 Bash”“不会修改文件”，除非：用户明确询问；本次操作因为权限边界被跳过；或需要解释为什么没有执行某个动作。
 
 ## 用户澄清门
 

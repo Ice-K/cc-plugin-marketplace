@@ -42,17 +42,17 @@ argument-hint: [--check|--apply]
 
 - 默认使用中文输出。
 - JSON / YAML 字段名保持英文。
-- 不修改业务代码。
-- 不运行 Bash。
+- 可以写入对应 `.spec-flow-kit/` 文件。
+- 不主动修改业务源码，除非用户明确要求本命令顺带修正，且范围很小。
+- 可以在必要时运行只读或低风险命令辅助判断。
+- 不默认运行 install、test、build、deploy 等可能耗时、改变环境或产生外部影响的命令。
+- 对覆盖、删除、迁移、批量改动等操作保持确认门。
+- 不要在最终输出中重复声明权限边界，例如“不修改业务代码”“不运行 Bash”“不会修改文件”，除非：用户明确询问；本次操作因为权限边界被跳过；或需要解释为什么没有执行某个动作。
 - 不无提示覆盖用户手写的 `rules/*.md`。
 - 不自动删除规则正文文件。
 - 不自动删除 `project-profile.yaml` 中用户手动添加且文件仍存在的 `rules.files` 条目。
 - 对文件已不存在的 `rules.files` 条目，先列为候选移除项；只有 `--apply` 或用户确认后才移除。
-- 新发现规则文件默认写入 `rules.yaml` 时使用 `level: recommended`、`status: proposed`、`enforcement.mode: advisory`。
-- 不自动把新发现规则升级为 `active` 或 `strict`。
-- 保留用户已有的 strict / active 配置；不要把用户已确认的严格规则降级。
-- 不把 Claude 推断当成用户确认。
-- secrets、token、private key、credentials 不应写入规则索引、报告或命令输出。
+- 不自动把规则改为 `strict`。
 
 ## 用户澄清门
 

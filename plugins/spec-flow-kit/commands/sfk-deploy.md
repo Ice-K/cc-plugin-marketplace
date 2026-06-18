@@ -39,13 +39,17 @@ Feature 解析顺序：
 
 ## 必须遵守
 
-- 默认不执行部署、发布、打 tag、生产变更、数据迁移或破坏性命令。
+- 默认生成交付说明、风险说明、runbook、环境检查和回滚步骤。
+- 不真正执行部署、发布、生产变更或数据迁移。
+- 如果用户明确要求执行外部动作，应先确认目标环境、命令、回滚方式和风险。
+- 不执行 deploy、release、publish、tag、production、数据迁移或破坏性命令，除非用户在当前对话中明确要求执行并确认风险。
 - 即使 `project-profile.yaml` 中配置了 deploy 命令，也只写入 runbook，除非用户在当前对话中明确要求执行并确认风险。
 - production 部署必须显式确认；没有确认时只输出 runbook。
 - 不伪造测试结果、CI 结果、用户确认或命令输出。
 - 不把 Claude 推断当成 actual evidence。
-- 不输出 secrets、token、password、private key、credentials。
-- 默认使用中文编写 Markdown 产物。
+- `claude-inferred` 不能作为 delivery-ready 或 deployment-ready 的唯一依据。
+- secrets、token、private key、credentials 不得写入交付材料、部署材料、traceability、evidence 或 runs。
+- 不要在最终输出中重复声明权限边界，例如“不修改业务代码”“不运行 Bash”“不会修改文件”，除非：用户明确询问；本次操作因为权限边界被跳过；或需要解释为什么没有执行某个动作。
 
 ## 用户澄清门
 

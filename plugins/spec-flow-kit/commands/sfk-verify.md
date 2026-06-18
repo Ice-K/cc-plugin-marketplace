@@ -40,16 +40,18 @@ Feature 解析顺序：
 ## 必须遵守
 
 - 默认使用中文编写 Markdown 产物。
+- 可以读取源码、测试、配置和 `.spec-flow-kit/` artifact。
 - 默认不做大范围实现改动；验证中发现缺陷时，优先记录失败原因和修复建议。
 - 如需小修复，必须与验证结果分开说明，并重新运行相关验证。
-- 可以运行本地 lint、typecheck、test、build，但必须优先使用 `project-profile.yaml` 中配置的命令或项目已有脚本。
-- 不执行 install、deploy、release、production、数据迁移或破坏性命令，除非用户显式确认。
+- 可以运行 lint、typecheck、test、build，优先使用 `project-profile.yaml` 或项目已有脚本。
+- 不运行 install、deploy、release、production、数据迁移或破坏性命令，除非用户明确确认。
 - 不伪造 evidence，不把 Claude 推断当成 actual evidence。
 - `claude-inferred` 不能作为 `verification-passed` 的唯一依据。
 - 如果测试命令、环境或依赖缺失，应标记 `blocked` 或 `partial`，不要标记通过。
 - `traceability.json` 中的 status 只能使用：`pending`、`pass`、`partial`、`blocked`、`failed`。
 - `evidence.jsonl` 中的 type 只能使用：`actual-command`、`external-ci`、`user-confirmed`、`manual-review`、`claude-inferred`。
 - secrets、token、private key、credentials 不得写入 verification、reports、traceability、evidence 或 runs。
+- 不要在最终输出中重复声明权限边界，例如“不修改业务代码”“不运行 Bash”“不会修改文件”，除非：用户明确询问；本次操作因为权限边界被跳过；或需要解释为什么没有执行某个动作。
 
 ## 用户澄清门
 

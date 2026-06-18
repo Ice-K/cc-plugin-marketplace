@@ -264,12 +264,95 @@ function getTopCommentBlock(text, relativePath) {
   return block.join('\n');
 }
 
+const UNIFIED_OUTPUT_RULE = '不要在最终输出中重复声明权限边界';
+
+const COMMAND_BOUNDARY_EXPECTATIONS = {
+  'sfk-status': [
+    '默认只读，不主动修改源码或 `.spec-flow-kit/` artifact。',
+    '不主动运行 Bash；如需运行命令，应说明目的，并在安全命令白名单或用户确认范围内执行。',
+  ],
+  'sfk-next': [
+    '默认只读，不主动修改源码或 `.spec-flow-kit/` artifact。',
+    '不主动运行 Bash；如需运行命令，应说明目的，并在安全命令白名单或用户确认范围内执行。',
+  ],
+  'sfk-audit': [
+    '默认只读，不主动修改源码或 `.spec-flow-kit/` artifact。',
+    '不主动运行 Bash；如需运行命令，应说明目的，并在安全命令白名单或用户确认范围内执行。',
+  ],
+  'sfk-init': [
+    '可以写入对应 `.spec-flow-kit/` 文件。',
+    '可以在必要时运行只读或低风险命令辅助判断。',
+  ],
+  'sfk-requirements': [
+    '可以写入对应 `.spec-flow-kit/` 文件。',
+    '可以在必要时运行只读或低风险命令辅助判断。',
+  ],
+  'sfk-design': [
+    '可以写入对应 `.spec-flow-kit/` 文件。',
+    '可以在必要时运行只读或低风险命令辅助判断。',
+  ],
+  'sfk-plan': [
+    '可以写入对应 `.spec-flow-kit/` 文件。',
+    '可以在必要时运行只读或低风险命令辅助判断。',
+  ],
+  'sfk-rules-sync': [
+    '可以写入对应 `.spec-flow-kit/` 文件。',
+    '可以在必要时运行只读或低风险命令辅助判断。',
+  ],
+  'sfk-use': [
+    '可以写入对应 `.spec-flow-kit/` 文件。',
+    '可以在必要时运行只读或低风险命令辅助判断。',
+  ],
+  'sfk-verify': [
+    '可以读取源码、测试、配置和 `.spec-flow-kit/` artifact。',
+    '可以运行 lint、typecheck、test、build，优先使用 `project-profile.yaml` 或项目已有脚本。',
+  ],
+  'sfk-development': [
+    '可以修改业务代码和测试代码。',
+    '修改范围必须绑定目标 feature 和选定 task。',
+  ],
+  'sfk-deliver': [
+    '默认生成交付说明、风险说明、runbook、环境检查和回滚步骤。',
+    '不真正执行部署、发布、生产变更或数据迁移。',
+  ],
+  'sfk-deploy': [
+    '默认生成交付说明、风险说明、runbook、环境检查和回滚步骤。',
+    '不真正执行部署、发布、生产变更或数据迁移。',
+  ],
+};
+
+const DISALLOWED_BROAD_BOUNDARY_PATTERNS = [
+  /^- 不修改业务代码。$/m,
+  /^- 默认不运行 Bash。$/m,
+  /^- 不运行 Bash。$/m,
+];
+
+function validateCommandPermissionBoundaries(command, relativePath) {
+  const text = readText(relativePath);
+  for (const expectedText of COMMAND_BOUNDARY_EXPECTATIONS[command] ?? []) {
+    if (!text.includes(expectedText)) {
+      error(`plugins/spec-flow-kit/${relativePath} is missing permission boundary text: ${expectedText}`);
+    }
+  }
+
+  if (!text.includes(UNIFIED_OUTPUT_RULE)) {
+    error(`plugins/spec-flow-kit/${relativePath} is missing unified output rule: ${UNIFIED_OUTPUT_RULE}`);
+  }
+
+  for (const pattern of DISALLOWED_BROAD_BOUNDARY_PATTERNS) {
+    if (pattern.test(text)) {
+      error(`plugins/spec-flow-kit/${relativePath} still contains broad permission boundary pattern: ${pattern}`);
+    }
+  }
+}
+
 function validateCommands() {
   for (const command of EXPECTED_COMMANDS) {
     const relativePath = `commands/${command}.md`;
     assertFile(relativePath);
     assertFrontmatter(relativePath, ['description', 'argument-hint']);
     assertMentioned('README.md', `/${command}`);
+    validateCommandPermissionBoundaries(command, relativePath);
   }
 }
 
